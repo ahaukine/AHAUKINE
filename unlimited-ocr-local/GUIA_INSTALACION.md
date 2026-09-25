@@ -100,6 +100,31 @@ python ocr_local.py escaneo.jpg
 
 ---
 
+## 🎯 Configuración específica: Windows 11 + RTX 4070 (12 GB)
+
+| Punto | Tu equipo | Veredicto |
+|---|---|---|
+| Arquitectura | Ada Lovelace, admite bf16 | ✅ Compatible con `torch_dtype=bfloat16` |
+| Driver | Requiere ≥ 570 para CUDA 12.8 | Actualiza desde la app NVIDIA o nvidia.com/drivers (Game Ready o Studio, cualquiera sirve) |
+| Rueda de PyTorch | `cu128` | ✅ El comando del paso 3 funciona tal cual |
+| VRAM 12 GB | Modelo ~7 GB (estimado) + contexto | ✅ Imágenes y PDFs cortos · ⚠️ PDFs largos: usa `--lote` |
+
+**Uso recomendado en tu equipo:**
+```
+python ocr_local.py escaneo.jpg                      # una imagen
+python ocr_local.py contrato.pdf                     # PDF de hasta ~10 páginas
+python ocr_local.py expediente.pdf --lote 10         # PDF largo: bloques de 10 páginas
+python ocr_local.py expediente.pdf --lote 5 --dpi 200  # si aun así se queda sin memoria
+```
+Con `--lote`, cada bloque se guarda en `salida_ocr\lote_001`, `lote_002`, etc. La contrapartida es que el modelo no ve el documento completo de una sola vez. Eso puede afectar tablas o párrafos que continúan entre páginas de bloques distintos.
+
+**Ajustes de Windows:**
+- Cierra juegos, navegadores con muchas pestañas o herramientas de video antes de procesar; también consumen VRAM. Para ver cuánta memoria de video queda libre: `nvidia-smi`.
+- Hugging Face puede mostrar un aviso sobre *symlinks* en Windows. Es inofensivo; para quitarlo, activa *Configuración → Sistema → Para programadores → Modo de desarrollador*.
+- Usa una ruta corta (ej. `C:\ocr`) para evitar errores de rutas largas.
+
+---
+
 ## Solución de problemas
 
 | Síntoma | Causa probable | Solución |
