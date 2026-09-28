@@ -1,0 +1,25 @@
+INSTALADOR UNLIMITED-OCR (baidu) - WINDOWS
+==========================================
+
+REQUISITOS DEL EQUIPO (si no se cumplen, el instalador se detiene y lo indica)
+- Windows 10/11 de 64 bits
+- Tarjeta NVIDIA RTX serie 30, 40 o 50 (o equivalente) con 12 GB de VRAM o mas
+- Driver NVIDIA version 570 o superior
+- 20 GB libres en el disco C:
+- Internet durante la instalacion (descarga aprox. 10 GB)
+
+NO FUNCIONA EN
+- Mac (Intel o Apple Silicon): el modelo requiere CUDA de NVIDIA
+- Equipos sin tarjeta NVIDIA o con NVIDIA antigua (GTX 700/900, etc.)
+
+INSTALACION
+1. Descomprimir el ZIP (clic derecho > Extraer todo).
+2. Doble clic en INSTALAR.bat.
+   Si aparece "Windows protegio su PC": Mas informacion > Ejecutar de todas formas.
+3. Esperar a que diga INSTALACION COMPLETA (20-60 min).
+
+USO
+Arrastrar un PDF o una imagen sobre el icono "Unlimited OCR" del Escritorio.
+El resultado queda en una carpeta <nombre>_ocr junto al archivo original.
+
+Todo se procesa localmente: los documentos no salen del equipo.
