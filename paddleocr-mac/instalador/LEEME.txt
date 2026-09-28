@@ -1,0 +1,30 @@
+INSTALADOR PADDLEOCR (Baidu) - MAC APPLE SILICON
+================================================
+
+REQUISITOS
+- Mac con chip Apple (M1, M2, M3 o M4). No funciona en Mac Intel.
+- macOS 12 Monterey o superior
+- 8 GB de RAM o mas
+- 6 GB libres en disco
+- Internet durante la instalacion
+
+INSTALACION
+1. Descomprimir el ZIP (doble clic).
+2. Doble clic en "instalar.command".
+   Si macOS dice que no puede abrirlo porque es de un desarrollador no identificado:
+   - Opcion A: Ajustes del Sistema > Privacidad y seguridad > bajar y dar clic en
+     "Abrir de todos modos". Luego volver a dar doble clic.
+   - Opcion B: abrir Terminal, escribir  bash  y un espacio, arrastrar
+     "instalar.command" a la ventana y presionar Enter.
+3. Esperar a que diga INSTALACION COMPLETA (10-30 min).
+
+USO
+En el Escritorio aparecen dos iconos:
+- "OCR Documento": arrastra PDF o imagenes. Genera Markdown (.md) con titulos,
+  parrafos y tablas.
+- "OCR Texto Rapido": solo texto plano (.txt), mas rapido.
+El resultado queda en una carpeta <nombre>_ocr junto al archivo original.
+La primera vez macOS pide permiso para controlar Terminal: elegir "Permitir".
+
+Todo se procesa localmente: los documentos no salen del equipo.
+Instalacion en: ~/OCR-Paddle   (para desinstalar, borrar esa carpeta y los iconos)
