@@ -10,11 +10,31 @@ function Falla($t) { Write-Host "`n  [ERROR] $t" -ForegroundColor Red; Read-Host
 
 # 1. GPU y driver
 Paso "1/7 Verificando GPU NVIDIA"
-if (-not (Get-Command nvidia-smi -ErrorAction SilentlyContinue)) { Falla "No se encontro nvidia-smi. Instala o actualiza el driver NVIDIA (nvidia.com/drivers) y vuelve a ejecutar." }
-$gpu = @(& nvidia-smi --query-gpu=name,driver_version,memory.total --format=csv,noheader)[0]
-$name, $drv, $mem = $gpu -split ",\s*"
+# nvidia-smi no siempre esta en el PATH: buscar en rutas conocidas
+$smi = (Get-Command nvidia-smi -ErrorAction SilentlyContinue).Source
+if (-not $smi) {
+    $cands = @("$env:WINDIR\Sysnative\nvidia-smi.exe", "$env:WINDIR\System32\nvidia-smi.exe",
+               "$env:ProgramFiles\NVIDIA Corporation\NVSMI\nvidia-smi.exe")
+    $cands += @(Get-ChildItem "$env:WINDIR\System32\DriverStore\FileRepository\nv*\nvidia-smi.exe" -ErrorAction SilentlyContinue | ForEach-Object { $_.FullName })
+    $smi = $cands | Where-Object { Test-Path $_ } | Select-Object -First 1
+}
+if ($smi) {
+    $gpu = @(& $smi --query-gpu=name,driver_version,memory.total --format=csv,noheader)[0]
+    $name, $drv, $mem = $gpu -split ",\s*"
+} else {
+    # Respaldo: leer la tarjeta desde Windows
+    $vc = Get-CimInstance Win32_VideoController | Where-Object { $_.Name -match "NVIDIA" } | Select-Object -First 1
+    if (-not $vc) {
+        $todas = (Get-CimInstance Win32_VideoController | ForEach-Object { $_.Name }) -join "; "
+        Falla "Windows no ve ninguna tarjeta NVIDIA con driver instalado. Tarjetas detectadas: $todas. Instala el driver desde nvidia.com/drivers (GeForce RTX 4070, Windows 11), reinicia y vuelve a ejecutar."
+    }
+    # Version Windows 32.0.15.7270 -> NVIDIA 572.70
+    $d = ($vc.DriverVersion -replace "\.", "")
+    $d = $d.Substring($d.Length - 5)
+    $name = $vc.Name; $drv = $d.Substring(0, 3) + "." + $d.Substring(3); $mem = "VRAM n/d"
+}
 Ok "$name | driver $drv | $mem"
-if ([int]($drv.Split(".")[0]) -lt 570) { Falla "El driver $drv es antiguo. Se requiere 570 o superior. Actualizalo desde la app NVIDIA y vuelve a ejecutar." }
+if ([int]($drv.Split(".")[0]) -lt 570) { Falla "El driver $drv es antiguo. Se requiere 570 o superior. Actualizalo desde la app NVIDIA (o nvidia.com/drivers), reinicia y vuelve a ejecutar." }
 
 # 2. Espacio en disco
 Paso "2/7 Verificando espacio en disco"
