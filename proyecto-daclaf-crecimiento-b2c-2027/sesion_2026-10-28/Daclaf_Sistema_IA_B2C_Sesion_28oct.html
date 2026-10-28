@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sistema de inteligencia B2C · DACLAF</title>
+<style>
+:root{--ink:#0f2a2e;--teal:#1d4e54;--teal2:#2a9d8f;--amber:#e8a33d;--rust:#c8553d;--bg:#f4f6f3;--card:#fff;--line:#d9ded6;--mut:#5b6b6e;--r:14px}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:64px}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Calibri,"Segoe UI",system-ui,sans-serif}
+h1,h2,h3{font-family:Cambria,Georgia,serif;line-height:1.15;margin:0}
+.wrap{max-width:1080px;margin:0 auto;padding:0 20px}
+nav{position:sticky;top:0;z-index:20;background:rgba(15,42,46,.97);backdrop-filter:blur(6px)}
+nav .wrap{display:flex;gap:4px;overflow-x:auto;padding:0 12px}
+nav a{color:#cfe0dc;text-decoration:none;padding:14px 12px;font-size:14px;white-space:nowrap}
+nav a:hover,nav a.on{color:#fff;box-shadow:inset 0 -3px var(--amber)}
+.hero{background:var(--ink);color:#fff;padding:64px 0 56px}
+.hero small{color:var(--amber);letter-spacing:.12em;text-transform:uppercase;font-weight:700;font-size:13px}
+.hero h1{font-size:clamp(30px,5vw,50px);max-width:760px;margin:12px 0 14px}
+.hero p{color:#cfe0dc;max-width:620px;margin:0 0 26px;font-size:18px}
+.btn{display:inline-block;border:0;border-radius:999px;padding:12px 22px;font:700 15px Calibri,sans-serif;cursor:pointer;background:var(--amber);color:var(--ink);text-decoration:none}
+.btn.ghost{background:transparent;color:#fff;border:1.5px solid #5d8089;margin-left:8px}
+.btn.sm{padding:8px 16px;font-size:14px}
+.btn.dk{background:var(--ink);color:#fff}
+section{padding:56px 0 8px}
+section>.wrap>h2{font-size:clamp(26px,3.6vw,36px);margin-bottom:6px}
+.lead{color:var(--mut);max-width:680px;margin:0 0 26px}
+.grid{display:grid;gap:14px}
+.tg{grid-template-columns:repeat(auto-fit,minmax(min(200px,100%),1fr))}
+.g4{grid-template-columns:repeat(auto-fit,minmax(min(220px,100%),1fr))}
+.g3{grid-template-columns:repeat(auto-fit,minmax(min(290px,100%),1fr))}
+.sp2{grid-template-columns:.9fr 1.3fr}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:20px}
+.stat b{display:block;font:700 46px/1 Cambria,serif;color:var(--teal)}
+.stat span{display:block;margin:8px 0 6px}
+.stat em{font-size:12px;color:var(--mut);font-style:normal}
+.split{display:grid;grid-template-columns:1.1fr 1fr;gap:18px;align-items:start}
+@media(max-width:760px){.split,.sp2{grid-template-columns:1fr}.detail{position:static}.btn.ghost{margin:10px 0 0}}
+.layer{display:block;width:100%;text-align:left;border:1px solid var(--line);background:#fff;border-radius:12px;padding:13px 16px;margin-bottom:8px;cursor:pointer;font:inherit;color:inherit}
+.layer b{font-family:Cambria,serif;font-size:17px;display:block}
+.layer span{color:var(--mut);font-size:14px}
+.layer.on{background:var(--teal);color:#fff;border-color:var(--teal)}
+.layer.on span{color:#cfe0dc}
+.detail{position:sticky;top:76px;background:var(--ink);color:#fff;border-radius:var(--r);padding:24px}
+.detail h3{font-size:24px;margin-bottom:8px;color:var(--amber)}
+.detail p{margin:0;color:#e3eeeb}
+.dlist{display:flex;flex-direction:column;gap:8px}
+.dbtn{display:flex;justify-content:space-between;gap:10px;align-items:center;text-align:left;border:1px solid var(--line);background:#fff;border-radius:12px;padding:11px 14px;cursor:pointer;font:inherit;color:inherit}
+.dbtn.on{border-color:var(--ink);box-shadow:0 0 0 2px var(--ink)}
+.tag{font-size:12px;font-weight:700;border-radius:999px;padding:3px 10px;white-space:nowrap}
+.n1{background:#d7efe9;color:#12574e}.n2{background:#fbe9c8;color:#7a4e07}.n3{background:#f6d5cd;color:#8a2c19}
+.tool{transition:.2s}
+.tool.off{opacity:.28;filter:grayscale(1)}
+.tool h3{font-size:19px}
+.tool .rol{color:var(--teal2);font-weight:700;font-size:14px;margin:2px 0 8px}
+.tool p{margin:0 0 8px;font-size:15px}
+.tool small{color:var(--mut)}
+.verdict{margin-top:14px;padding:14px 16px;border-radius:12px;background:#fff;border:1px dashed var(--teal);font-size:15px;min-height:52px}
+.steps{display:flex;gap:6px;overflow-x:auto;padding-bottom:6px;margin-bottom:14px}
+.step{flex:1;min-width:92px;border:1px solid var(--line);background:#fff;border-radius:12px;padding:10px 8px;cursor:pointer;text-align:center;font:inherit;color:inherit}
+.step b{display:block;font-family:Cambria,serif;font-size:20px;color:var(--teal2)}
+.step span{font-size:12.5px;line-height:1.2;display:block}
+.step.on{background:var(--ink);color:#fff;border-color:var(--ink)}
+.step.on b{color:var(--amber)}
+.kv{display:grid;grid-template-columns:150px 1fr;gap:6px 14px;margin:0}
+.kv dt{color:var(--mut);font-size:14px}.kv dd{margin:0;font-weight:600}
+@media(max-width:560px){.kv{grid-template-columns:1fr}.kv dt{margin-top:8px}}
+.crit{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.crit span{background:#e5ece7;border-radius:999px;padding:6px 13px;font-size:14px}
+.tl{display:grid;gap:12px;grid-template-columns:repeat(auto-fit,minmax(min(165px,100%),1fr))}
+.tl .card{padding:16px}
+.tl .f{font:700 15px Calibri;color:var(--teal2)}
+.tl h3{font-size:18px;margin:4px 0 6px}
+.tl p{margin:0;font-size:14px;color:var(--mut)}
+.tl .hoy{background:var(--amber);border-color:var(--amber)}.tl .hoy .f,.tl .hoy p{color:var(--ink)}
+.tl .pausa{background:repeating-linear-gradient(135deg,#eceee9,#eceee9 8px,#f6f7f4 8px,#f6f7f4 16px);border-style:dashed}
+.tl .hito{border-color:var(--teal);box-shadow:0 0 0 2px var(--teal)}
+.dec{counter-reset:d;grid-template-columns:repeat(2,1fr)}
+@media(max-width:700px){.dec{grid-template-columns:1fr}}
+@media(min-width:1000px){.tl{grid-template-columns:repeat(6,1fr)}}
+.dec .card{counter-increment:d;position:relative;padding-left:62px}
+.dec .card:before{content:counter(d);position:absolute;left:16px;top:16px;width:34px;height:34px;border-radius:50%;background:var(--amber);font:700 18px/34px Cambria,serif;text-align:center}
+.dec h3{font-size:19px;margin-bottom:4px}.dec p{margin:0;color:var(--mut);font-size:15px}
+.bar{position:sticky;top:48px;z-index:15;background:var(--bg);padding:12px 0;border-bottom:1px solid var(--line);display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+.seg{display:flex;border:1px solid var(--line);border-radius:999px;overflow:hidden;background:#fff}
+.seg button{border:0;background:none;padding:8px 14px;font:600 14px Calibri;cursor:pointer}
+.seg button.on{background:var(--ink);color:#fff}
+.prog{flex:1;min-width:160px}
+.prog i{display:block;height:8px;border-radius:99px;background:#dfe5df;overflow:hidden}
+.prog i b{display:block;height:100%;background:var(--teal2);width:0;transition:.3s}
+.prog small{color:var(--mut)}
+.q{margin-top:14px}
+.q.done{border-color:var(--teal2);background:#f1faf7}
+.q.def{opacity:.85}
+.qh{display:flex;gap:10px;align-items:baseline;flex-wrap:wrap}
+.qid{font:700 15px Cambria,serif;background:var(--ink);color:#fff;border-radius:8px;padding:2px 10px}
+.qpar{font-size:13px;color:var(--mut)}
+.q h3{font-size:20px;margin:8px 0 4px}
+.q .full{margin:0 0 6px}
+.q .por{font-size:14px;color:var(--mut);margin:0 0 10px}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px}
+.chip{border:1px solid var(--line);background:#fff;border-radius:999px;padding:6px 12px;font:14px Calibri;cursor:pointer}
+.chip.on{background:var(--teal);border-color:var(--teal);color:#fff}
+textarea{width:100%;min-height:64px;border:1px solid var(--line);border-radius:10px;padding:10px 12px;font:15px/1.4 Calibri,sans-serif;resize:vertical;background:#fff;color:var(--ink)}
+.qf{display:flex;gap:8px;align-items:center;margin-top:8px;flex-wrap:wrap}
+.qf select{border:1px solid var(--line);border-radius:8px;padding:7px 10px;font:14px Calibri;background:#fff}
+.note{font-size:13px;color:var(--mut);margin:26px 0 0}
+footer{padding:36px 0 60px;color:var(--mut);font-size:13px}
+.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:var(--ink);color:#fff;padding:10px 18px;border-radius:99px;font-size:14px;opacity:0;pointer-events:none;transition:.25s;z-index:50}
+.toast.on{opacity:1}
+@media print{nav,.bar,.btn,.toast{display:none}.detail{position:static}section{padding-top:24px}}
+</style>
+</head>
+<body>
+<nav><div class="wrap" id="nav"></div></nav>
+
+<header class="hero"><div class="wrap">
+<small>Grupo DACLAF · Sesión de trabajo · 28 de octubre de 2026</small>
+<h1>Un sistema de inteligencia para llegar a 300 SKUs</h1>
+<p>Cómo combinamos varias herramientas de IA, con reglas claras de datos y decisiones en sus manos, para investigar mercado, priorizar lanzamientos y alimentar el Presupuesto 2027.</p>
+<a class="btn" href="#preguntas">Ir a las preguntas de hoy</a><a class="btn ghost" href="#sistema">Ver el diseño</a>
+</div></header>
+
+<section id="reto"><div class="wrap">
+<h2>El reto en cuatro cifras</h2>
+<p class="lead">El B2C crece entre 5 y 10 % anual y depende de una sola marca. La meta exige pasar de un catálogo de 43 productos publicados a 300 SKUs.</p>
+<div class="grid g4" id="stats"></div>
+<p class="note">Fuentes: catálogo de daclaf.com (26-oct), reunión del 26-oct y documento de trabajo "Acelerador de Lanzamientos". El catálogo web no es el maestro de artículos; la línea base oficial sale de NetSuite [POR CONFIRMAR].</p>
+</div></section>
+
+<section id="sistema"><div class="wrap">
+<h2>El sistema en seis capas</h2>
+<p class="lead">Toque una capa. De abajo hacia arriba: la información se obtiene con reglas, se registra con su fuente, se analiza y llega a ustedes para decidir.</p>
+<div class="split"><div id="capas"></div><div class="detail" id="capaDet"></div></div>
+</div></section>
+
+<section id="herramientas"><div class="wrap">
+<h2>Quién hace qué, y qué datos puede ver</h2>
+<p class="lead">Las herramientas son intercambiables porque todas reciben el mismo encargo y entregan en el mismo formato. Elija un tipo de información y vea qué herramientas pueden recibirla.</p>
+<div class="split sp2">
+<div><div class="dlist" id="dlist"></div><div class="verdict" id="verdict">Elija un tipo de información.</div></div>
+<div class="grid tg" id="tools"></div>
+</div>
+<p class="note"><b>N1</b> público · <b>N2</b> interno · <b>N3</b> crítico. Las capacidades de cada herramienta cambian con frecuencia: probaremos cada una con una tarea piloto antes de asignarle carga real.</p>
+</div></section>
+
+<section id="embudo"><div class="wrap">
+<h2>Del universo a la lista corta</h2>
+<p class="lead">Ocho etapas. En cada una se indica qué responde, quién lo hace y quién decide.</p>
+<div class="steps" id="steps"></div>
+<div class="card" id="stepDet"></div>
+<h3 style="margin:24px 0 4px;font-size:20px">Criterios de calificación (propuesta inicial)</h3>
+<p class="lead" style="margin-bottom:0">Los pesos de cada criterio los fijan David y Sara; no se imponen.</p>
+<div class="crit" id="crit"></div>
+</div></section>
+
+<section id="ruta"><div class="wrap">
+<h2>Ruta al 18 de diciembre</h2>
+<p class="lead">El consultor estará ausente del 17 de noviembre al 3 de diciembre. Por eso hay una entrega parcial el 13 de noviembre.</p>
+<div class="tl" id="tl"></div>
+</div></section>
+
+<section id="decisiones"><div class="wrap">
+<h2>Cuatro decisiones que pedimos hoy</h2>
+<p class="lead">Con estas cuatro, el trabajo de esta semana puede arrancar.</p>
+<div class="grid g3 dec" id="dec"></div>
+</div></section>
+
+<section id="preguntas"><div class="wrap">
+<h2>Preguntas en vivo</h2>
+<p class="lead">Diez preguntas para hoy y cuatro si hay tiempo. Cada respuesta se anota aquí mismo y queda guardada en este navegador; al final se exporta un resumen.</p>
+<div class="bar">
+<div class="seg" id="filt"><button data-f="all" class="on">Todas</button><button data-f="1">Para hoy</button><button data-f="2">Si da tiempo</button><button data-f="pend">Pendientes</button></div>
+<div class="prog"><i><b id="pb"></b></i><small id="pt"></small></div>
+<button class="btn sm dk" id="bcopy">Copiar resumen</button><button class="btn sm" id="bdl">Descargar .md</button>
+</div>
+<div id="qs"></div>
+<p class="note"><button class="btn sm ghost" style="color:var(--ink);border-color:var(--line);margin:0" id="breset">Borrar respuestas</button></p>
+</div></section>
+
+<footer><div class="wrap">Practical AI® · Documento de trabajo generado con asistencia de IA · Requiere validación de la persona responsable · Confidencial, uso interno de DACLAF</div></footer>
+<div class="toast" id="toast"></div>
+
+<script>
+const D={"meta":{"titulo":"Acelerar el B2C: sistema de inteligencia para llegar a 300 SKUs","sub":"Sesión de trabajo · DACLAF · 28 oct 2026 · 12:30","pie":"Practical AI® · Documento de trabajo generado con asistencia de IA · Requiere validación de la persona responsable"},"stats":[{"n":"43","l":"productos publicados hoy en daclaf.com (34 individuales + 9 kits)","f":"Catálogo web, 26-oct"},{"n":"300","l":"SKUs en 5–6 marcas: la meta, en 2–3 años","f":"Reunión 26-oct"},{"n":"8–9","l":"lanzamientos al mes si el plazo es de 3 años (100 al año)","f":"Doc. Acelerador de Lanzamientos"},{"n":"~50%","l":"de las ventas B2C en una sola marca (Fotosun, 10–12 SKUs)","f":"Reunión 26-oct"}],"capas":[{"id":"c5","t":"Decisión humana","s":"David y Sara deciden en 3 compuertas","d":"Compuerta 1: ¿vale explorarlo? Compuerta 2: ¿lo desarrollamos? Compuerta 3: ¿sale al mercado? Asuntos Regulatorios valida todo lo sanitario. El sistema recomienda; no decide."},{"id":"c4","t":"Entregables","s":"Fichas, modelo, tablero, Presupuesto 2027","d":"Ficha de una página por candidato, modelo en Excel con el embudo de 300 SKUs, tablero de indicadores y escenarios para el Presupuesto 2027."},{"id":"c3","t":"Análisis y priorización","s":"Claude en un Project compartido","d":"Cruza mercado, capacidad de fabricación y rentabilidad; califica cada oportunidad; decide Hacer, Maquilar o Asociarse; detecta contradicciones entre fuentes."},{"id":"c2","t":"Registro de evidencia","s":"Cada cifra con fuente, fecha y confianza","d":"Una sola tabla donde cae todo dato externo: qué afirma, de dónde sale, qué herramienta lo trajo y su nivel de confianza (A, B o C). Sin fila en el registro, no entra a una ficha ni al presupuesto."},{"id":"c1","t":"Obtención de información","s":"Varias IA con roles distintos","d":"Externa: Perplexity, Genspark, Manus, ChatGPT, Gemini. Interna: maestro de artículos NetSuite, ventas por SKU, documentos de DACLAF en NotebookLM. Todas reciben el mismo brief y entregan en el mismo formato, por eso son intercambiables."},{"id":"c0","t":"Gobierno de datos","s":"Qué información puede ir a qué herramienta","d":"Tres niveles: público, interno y crítico. Lo interno y lo crítico no salen del Project compartido. Reglas mínimas para aprobar hoy (pregunta 10)."}],"tools":[{"n":"Claude","rol":"Orquestador y analista","ej":"Califica oportunidades, arma el modelo, redacta fichas y presupuesto","datos":"N1 · N2 · N3","k":"hub"},{"n":"NotebookLM / Gemini","rol":"Corpus cerrado con citas","ej":"Regulación, reportes de Hypera y Cimed, documentos internos","datos":"N1 · N2","k":"corpus"},{"n":"Perplexity","rol":"Investigación con fuentes","ej":"Tamaño y tendencia de una categoría, precios en anaquel","datos":"N1","k":"ext"},{"n":"Genspark","rol":"Barrido amplio de oportunidades","ej":"Universo de productos por categoría, tablas comparativas","datos":"N1","k":"ext"},{"n":"Manus","rol":"Tareas largas autónomas","ej":"Levantar catálogos de competidores en retail y marketplaces","datos":"N1","k":"ext"},{"n":"ChatGPT","rol":"Segunda opinión","ej":"Ataca los supuestos del ranking antes de llegar a ustedes","datos":"N1 · anonimizado","k":"ext"}],"datos":[{"n":"Catálogo público de daclaf.com","nivel":1},{"n":"Reportes de resultados de Hypera y Cimed","nivel":1},{"n":"Regulación COFEPRIS y Ley General de Salud","nivel":1},{"n":"Ventas por SKU y por marca","nivel":2},{"n":"Capacidad de Lerma y lista de maquiladores","nivel":2},{"n":"Costos y márgenes por SKU","nivel":3},{"n":"Presupuesto 2027","nivel":3},{"n":"Contratos y licitación 2027 de Similares","nivel":3}],"niveles":[{"k":1,"t":"Público","d":"Cualquier herramienta","tools":["Claude","NotebookLM / Gemini","Perplexity","Genspark","Manus","ChatGPT"]},{"k":2,"t":"Interno","d":"Solo el Project compartido y el corpus cerrado","tools":["Claude","NotebookLM / Gemini"]},{"k":3,"t":"Crítico","d":"Solo el Project compartido; a otras herramientas, únicamente como índice relativo","tools":["Claude"]}],"embudo":[{"e":"E0","t":"Línea base","q":"Qué se vende hoy y qué no, por marca y entidad","e2":"Maestro NetSuite + ventas por SKU","s":"Tabla base y diagnóstico de datos maestros","d":"Sistemas / Contraloría confirma"},{"e":"E1","t":"Universo","q":"Qué se podría lanzar: extensiones de marcas actuales y categorías nuevas","e2":"Perplexity, Genspark","s":"Lista larga con fuente","d":"—"},{"e":"E2","t":"Filtro regulatorio","q":"Carril A (extensión), B (cosmético o suplemento) o C (OTC con registro)","e2":"NotebookLM + Claude","s":"Carril y tiempo estimado","d":"Asuntos Regulatorios valida"},{"e":"E3","t":"Atractivo de mercado","q":"Tamaño, crecimiento, precio, competidores, reseñas","e2":"Perplexity, Manus","s":"Evidencia en el registro","d":"—"},{"e":"E4","t":"Hacer, Maquilar o Asociarse","q":"Planta Lerma, maquila, licencia de dossier o collab","e2":"Claude (datos internos)","s":"Matriz por SKU","d":"Operaciones y Compras"},{"e":"E5","t":"Priorización","q":"Calificación ponderada y prueba de sensibilidad","e2":"Claude + segunda opinión","s":"Ranking y shortlist","d":"David y Sara fijan los pesos"},{"e":"E6","t":"Compuerta 1","q":"Ficha de una página por candidato","e2":"Claude","s":"Fichas","d":"David y Sara deciden"},{"e":"E7","t":"Presupuesto 2027","q":"Qué cuesta desarrollar, registrar y producir el pipeline","e2":"Claude + Excel","s":"Escenarios","d":"Finanzas"}],"criterios":["Atractivo de mercado","Ajuste a la marca y a sus claims","Velocidad al mercado (carril)","Margen estimado","Ajuste de manufactura","Riesgo de inventario y caducidad","Absorción del canal"],"ruta":[{"f":"28 oct","t":"Sesión de arranque","d":"Decisiones y respuestas de hoy","k":"hoy"},{"f":"29–31 oct","t":"Línea base","d":"Maestro de artículos y ventas por SKU","k":"on"},{"f":"3–13 nov","t":"Embudo v1","d":"Universo, filtro regulatorio, mercado y primer ranking","k":"on"},{"f":"13 nov","t":"Entrega parcial","d":"Ranking preliminar y guía de uso del Project","k":"hito"},{"f":"17 nov – 3 dic","t":"Pausa del consultor","d":"Sin construcción nueva; consultas básicas","k":"pausa"},{"f":"4–18 dic","t":"Cierre","d":"Make/Buy, shortlist, fichas de Compuerta 1 y Presupuesto 2027","k":"on"}],"decisiones":[{"t":"Definir la meta","d":"300 SKUs en cartera o 300 lanzamientos; qué cuenta como SKU y en qué plazo."},{"t":"Aprobar reglas de datos","d":"Project compartido para ustedes; solo información pública hacia herramientas externas."},{"t":"Comprometer la línea base","d":"Quién entrega el maestro de artículos y las ventas por SKU, y para cuándo."},{"t":"Nombrar contrapartes","d":"Asuntos Regulatorios, Operaciones/Lerma y Finanzas; fecha de la siguiente sesión."}],"preguntas":[{"id":"Q1","p":1,"b":"Meta","para":"David y Sara","c":"¿300 en cartera o 300 lanzamientos?","t":"¿La meta es llegar a 300 SKUs en cartera o lanzar 300 productos? ¿Cuentan kits, presentaciones y ediciones limitadas como SKU?","por":"Con 43–50 SKUs hoy, la diferencia es de unos 250 netos más la reposición de los que salgan. Cambia el embudo y el presupuesto.","chips":["300 en cartera","300 lanzamientos","Kits sí cuentan","Kits no cuentan","Variantes sí cuentan"]},{"id":"Q2","p":1,"b":"Meta","para":"David","c":"¿Plazo de 2 o de 3 años?","t":"¿El horizonte para llegar a la meta es de 2 años (150 al año, 12–13 al mes) o de 3 años (100 al año, 8–9 al mes)?","por":"Define el ritmo de la célula de lanzamientos y la carga del Presupuesto 2027.","chips":["3 años","2 años","Por etapas"]},{"id":"Q3","p":1,"b":"Línea base","para":"David y Sara","c":"¿Quién entrega maestro y ventas, y cuándo?","t":"¿Quién puede entregar el maestro de artículos de NetSuite (DF y DAS) y las ventas por SKU y marca de 2024 a 2026, y para qué fecha?","por":"Sin esto no hay punto de partida. El catálogo web no es el maestro.","chips":["Sistemas","Contraloría","Sara","Antes del 31-oct","Antes del 7-nov"]},{"id":"Q4","p":1,"b":"Proceso","para":"Sara","c":"¿Dónde se atora hoy un lanzamiento?","t":"¿Cuántos productos se lanzaron en 2024 y 2025, en cuánto tiempo, y en qué paso se atora hoy un lanzamiento: regulatorio, diseño, compras, aprobaciones, maquila o alta en NetSuite?","por":"El 'cuello de botella' decide dónde automatizar y qué plataformas reutilizables construir primero.","chips":["Regulatorio","Diseño","Compras","Aprobaciones","Maquila","Alta en NetSuite"]},{"id":"Q5","p":1,"b":"Portafolio","para":"David y Sara","c":"¿Extender marcas, crear o adquirir?","t":"¿Cuál es la mezcla esperada: extender marcas actuales, crear marcas nuevas o adquirirlas? ¿Qué categorías van primero: protección y post-solar, cuidado personal, suplementos, OTC, mascotas?","por":"Seis marcas tienen entre 1 y 4 productos: ahí hay espacio sin crear marcas. Define a quién investigamos primero.","chips":["Extender marcas actuales","Marcas nuevas","Adquirir marcas","Post-solar / dérmico","Suplementos","Cuidado personal","OTC","Mascotas"]},{"id":"Q6","p":1,"b":"Fabricación","para":"David","c":"¿Qué fabrica Lerma y qué va a maquila?","t":"¿Qué capacidad tiene Lerma (incluida la línea WDS), qué proporción del volumen nuevo iría a maquila y existen maquiladores ya calificados por categoría? ¿Quién responde por Operaciones?","por":"El ritmo de lanzamiento no puede superar la capacidad de surtir.","chips":["Responde Operaciones","Hay maquiladores calificados","No hay lista","Solo gomitas en Lerma"]},{"id":"Q7","p":1,"b":"Regulatorio","para":"David y Sara","c":"¿Registros OTC extensibles y quién valida?","t":"¿Hay registros sanitarios OTC vigentes que se puedan extender o trámites en curso? ¿Hay apetito por adquirir dossiers? ¿Quién de Asuntos Regulatorios validará lo que proponga el sistema?","por":"El carril OTC tiene ciclo largo y debe arrancar ya. El sistema no sustituye el criterio de Regulatorio.","chips":["Sí, hay extensibles","Evaluar dossiers","Contacto: ","Sin registros disponibles"]},{"id":"Q8","p":1,"b":"Criterios","para":"David","c":"¿Cuándo un SKU se considera exitoso?","t":"¿Cuál es el criterio de éxito de un SKU a 6 y a 12 meses (venta mínima, margen, rotación)? ¿Existe hoy una regla de descontinuación y qué tolerancia hay a SKUs que fracasan o a inventario próximo a caducar?","por":"Sin regla de salida, 300 SKUs multiplican inventario, caducidades y artículos en NetSuite.","chips":["Hay regla","No hay regla","Definir con Finanzas","Venta mínima 6 meses","Margen mínimo"]},{"id":"Q9","p":1,"b":"Presupuesto","para":"David","c":"¿Hay techo para el Presupuesto 2027?","t":"¿Existe un rango o techo para desarrollo, registros e inventario inicial del 2027? ¿Quién de Finanzas participa en la revisión?","por":"Permite dimensionar escenarios realistas en lugar de un plan sin restricción.","chips":["Hay rango","Aún no","Se define con Finanzas","Participa: "]},{"id":"Q10","p":1,"b":"Datos y acceso","para":"David","c":"¿Autoriza el Project compartido y las reglas de datos?","t":"¿Autoriza compartir ventas por SKU y capacidad en un Project compartido que opera Practical AI, con acceso para David y Sara? ¿Aprueba la regla mínima: a herramientas externas solo va información pública o anonimizada?","por":"DACLAF aún no tiene política de TI para IA. Esta regla mínima protege la información crítica mientras se define una.","chips":["Sí","Sí, con condiciones","No por ahora","Acceso solo David y Sara","Agregar a: "]},{"id":"Q11","p":2,"b":"Gobierno","para":"David","c":"¿Quién es dueño del acelerador?","t":"¿Quién será el líder del acelerador, a quién reporta y qué decisiones puede tomar sin escalar?","por":"Una célula sin autoridad de decisión repite el problema actual.","chips":["Por definir","Sara","Otro: "]},{"id":"Q12","p":2,"b":"Canales","para":"David y Sara","c":"¿Cuánta novedad absorben los canales?","t":"¿Qué canales pueden absorber lanzamientos y con qué apetito? ¿Qué compromisos derivan de la licitación 2027 de Similares?","por":"Los canales tienen un límite real para recibir novedades.","chips":["Similares","Cadenas","E-commerce","Distribuidores","Sin límite claro"]},{"id":"Q13","p":2,"b":"Categorías","para":"Sara","c":"¿Exploramos suplementos para mascotas?","t":"¿Se explora la categoría de suplementos para mascotas en canal veterinario? ¿Quién la lidera y con qué criterio se decide?","por":"Quedó como idea preliminar; sin responsable no avanza.","chips":["Sí, explorar","Después","No"]},{"id":"Q14","p":2,"b":"Siguiente paso","para":"David y Sara","c":"¿Qué documentos y cuándo nos vemos?","t":"¿Qué documentos pueden compartir esta semana (ventas, benchmarks, competidores que monitorean) y cuándo es la siguiente sesión?","por":"Alimenta el Project y fija el ritmo de trabajo antes de la pausa del 17 de noviembre.","chips":["Esta semana","Próxima sesión: "]}]};
+const $=(s,r=document)=>r.querySelector(s), esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const KEY='daclaf_sesion_2026-10-28';
+let S={};
+try{S=JSON.parse(localStorage.getItem(KEY)||'{}')}catch(e){S={}}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(S))}catch(e){}};
+const toast=m=>{const t=$('#toast');t.textContent=m;t.classList.add('on');setTimeout(()=>t.classList.remove('on'),1800)};
+
+// nav
+const secs=[['reto','El reto'],['sistema','Sistema'],['herramientas','Herramientas y datos'],['embudo','Embudo'],['ruta','Ruta'],['decisiones','Decisiones'],['preguntas','Preguntas']];
+$('#nav').innerHTML=secs.map(s=>`<a href="#${s[0]}">${s[1]}</a>`).join('');
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){document.querySelectorAll('nav a').forEach(a=>a.classList.toggle('on',a.getAttribute('href')==='#'+e.target.id))}}),{rootMargin:'-40% 0px -55% 0px'});
+secs.forEach(s=>io.observe($('#'+s[0])));
+
+// stats
+$('#stats').innerHTML=D.stats.map(s=>`<div class="card stat"><b>${esc(s.n)}</b><span>${esc(s.l)}</span><em>${esc(s.f)}</em></div>`).join('');
+
+// capas
+let capaSel='c3';
+function drawCapas(){
+ $('#capas').innerHTML=D.capas.map(c=>`<button class="layer ${c.id===capaSel?'on':''}" data-id="${c.id}"><b>${esc(c.t)}</b><span>${esc(c.s)}</span></button>`).join('');
+ const c=D.capas.find(x=>x.id===capaSel);
+ $('#capaDet').innerHTML=`<h3>${esc(c.t)}</h3><p>${esc(c.d)}</p>`;
+ document.querySelectorAll('.layer').forEach(b=>b.onclick=()=>{capaSel=b.dataset.id;drawCapas()});
+}
+drawCapas();
+
+// datos + herramientas
+let dsel=null;
+function drawTools(){
+ $('#dlist').innerHTML=D.datos.map((d,i)=>`<button class="dbtn ${i===dsel?'on':''}" data-i="${i}"><span>${esc(d.n)}</span><span class="tag n${d.nivel}">N${d.nivel}</span></button>`).join('');
+ const lv=dsel===null?null:D.niveles[D.datos[dsel].nivel-1];
+ $('#tools').innerHTML=D.tools.map(t=>`<div class="card tool ${lv&&!lv.tools.includes(t.n)?'off':''}"><h3>${esc(t.n)}</h3><div class="rol">${esc(t.rol)}</div><p>${esc(t.ej)}</p><small>Datos: ${esc(t.datos)}</small></div>`).join('');
+ $('#verdict').innerHTML=lv?`<b>Nivel ${lv.k} · ${esc(lv.t)}.</b> ${esc(lv.d)}.`:'Elija un tipo de información.';
+ document.querySelectorAll('.dbtn').forEach(b=>b.onclick=()=>{dsel=+b.dataset.i;drawTools()});
+}
+drawTools();
+
+// embudo
+let ssel=0;
+function drawSteps(){
+ $('#steps').innerHTML=D.embudo.map((e,i)=>`<button class="step ${i===ssel?'on':''}" data-i="${i}"><b>${e.e}</b><span>${esc(e.t)}</span></button>`).join('');
+ const e=D.embudo[ssel];
+ $('#stepDet').innerHTML=`<h3 style="font-size:24px;margin-bottom:12px">${e.e} · ${esc(e.t)}</h3><dl class="kv"><dt>Responde</dt><dd>${esc(e.q)}</dd><dt>Con qué</dt><dd>${esc(e.e2)}</dd><dt>Entrega</dt><dd>${esc(e.s)}</dd><dt>Decide / valida</dt><dd>${esc(e.d)}</dd></dl>`;
+ document.querySelectorAll('.step').forEach(b=>b.onclick=()=>{ssel=+b.dataset.i;drawSteps()});
+}
+drawSteps();
+$('#crit').innerHTML=D.criterios.map(c=>`<span>${esc(c)}</span>`).join('');
+
+// ruta y decisiones
+$('#tl').innerHTML=D.ruta.map(r=>`<div class="card ${r.k}"><div class="f">${esc(r.f)}</div><h3>${esc(r.t)}</h3><p>${esc(r.d)}</p></div>`).join('');
+$('#dec').innerHTML=D.decisiones.map(d=>`<div class="card"><h3>${esc(d.t)}</h3><p>${esc(d.d)}</p></div>`).join('');
+
+// preguntas
+let filt='all';
+const st=id=>S[id]||(S[id]={chips:[],note:'',status:'pend'});
+const STAT={pend:'Pendiente',ok:'Respondida',def:'Diferida'};
+function drawQs(){
+ const list=D.preguntas.filter(q=>filt==='all'||(filt==='pend'?st(q.id).status==='pend':String(q.p)===filt));
+ $('#qs').innerHTML=list.map(q=>{const s=st(q.id);return `<div class="card q ${s.status==='ok'?'done':''} ${s.status==='def'?'def':''}" data-id="${q.id}">
+ <div class="qh"><span class="qid">${q.id}</span><span class="qpar">${esc(q.b)} · Responde: ${esc(q.para)} · ${q.p===1?'Para hoy':'Si da tiempo'}</span></div>
+ <h3>${esc(q.c)}</h3><p class="full">${esc(q.t)}</p><p class="por"><b>Por qué importa:</b> ${esc(q.por)}</p>
+ <div class="chips">${q.chips.map(c=>`<button class="chip ${s.chips.includes(c)?'on':''}" data-c="${esc(c)}">${esc(c)}</button>`).join('')}</div>
+ <textarea placeholder="Respuesta, responsable y fecha…">${esc(s.note)}</textarea>
+ <div class="qf"><select>${Object.entries(STAT).map(([k,v])=>`<option value="${k}" ${s.status===k?'selected':''}>${v}</option>`).join('')}</select></div></div>`}).join('')||'<p class="lead">No hay preguntas en este filtro.</p>';
+ document.querySelectorAll('.q').forEach(el=>{
+  const id=el.dataset.id;
+  el.querySelectorAll('.chip').forEach(b=>b.onclick=()=>{const s=st(id),c=b.dataset.c,i=s.chips.indexOf(c);i<0?s.chips.push(c):s.chips.splice(i,1);if(s.status==='pend'&&s.chips.length)s.status='ok';save();drawQs()});
+  el.querySelector('textarea').oninput=e=>{st(id).note=e.target.value;save()};
+  el.querySelector('textarea').onblur=()=>{const s=st(id);if(s.note.trim()&&s.status==='pend'){s.status='ok';save();drawQs()}};
+  el.querySelector('select').onchange=e=>{st(id).status=e.target.value;save();drawQs()};
+ });
+ prog();
+}
+function prog(){
+ const tot=D.preguntas.length, hoy=D.preguntas.filter(q=>q.p===1), ok=a=>a.filter(q=>st(q.id).status==='ok').length;
+ $('#pb').style.width=(ok(D.preguntas)/tot*100)+'%';
+ $('#pt').textContent=`${ok(hoy)} de ${hoy.length} de hoy · ${ok(D.preguntas)} de ${tot} en total`;
+}
+document.querySelectorAll('#filt button').forEach(b=>b.onclick=()=>{filt=b.dataset.f;document.querySelectorAll('#filt button').forEach(x=>x.classList.toggle('on',x===b));drawQs()});
+function md(){
+ let o=`# Respuestas de la sesión · DACLAF · 28 oct 2026\n\n`;
+ D.preguntas.forEach(q=>{const s=st(q.id);o+=`## ${q.id} · ${q.c}\n- Estado: ${STAT[s.status]} · Responde: ${q.para}\n`+(s.chips.length?`- Selección: ${s.chips.join('; ')}\n`:'')+(s.note.trim()?`- Nota: ${s.note.trim().replace(/\n/g,'\n  ')}\n`:'')+'\n'});
+ return o;
+}
+$('#bcopy').onclick=async()=>{try{await navigator.clipboard.writeText(md());toast('Resumen copiado')}catch(e){const t=document.createElement('textarea');t.value=md();document.body.appendChild(t);t.select();try{document.execCommand('copy');toast('Resumen copiado')}catch(_){toast('No se pudo copiar; use Descargar')}t.remove()}};
+$('#bdl').onclick=()=>{const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([md()],{type:'text/markdown'}));a.download='Respuestas_sesion_DACLAF_2026-10-28.md';a.click();setTimeout(()=>URL.revokeObjectURL(a.href),1000)};
+$('#breset').onclick=()=>{if(confirm('¿Borrar todas las respuestas capturadas?')){S={};save();drawQs()}};
+drawQs();
+</script>
+</body>
+</html>

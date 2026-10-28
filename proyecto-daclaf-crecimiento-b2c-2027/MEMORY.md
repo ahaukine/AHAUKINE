@@ -10,6 +10,13 @@ Contexto revisado (PDF Acelerador, 2 resúmenes Plaud, MEMORY y BITACORA del pro
 - Ausencia del Dr. 17-nov → 3-dic.
 - Meta de negocio: 300 SKUs en 5–6 marcas, 2–3 años; modelo de referencia = Acelerador de Lanzamientos (3 carriles, 3 compuertas).
 
+## Aclaraciones del Dr. (28.OCT, mañana)
+- Sesión con David y Sara **hoy 28-oct 12:30**. Cuestionario aún no presentado; sin respuestas.
+- Las cuentas son **del Dr.** (Claude, Gemini + NotebookLM, Genspark, Manus, Perplexity; ChatGPT como hub secundario). David y Sara no tienen cuentas propias.
+- **El Dr. opera el sistema**, en un **Project compartido** al que David también accede. Cambia el modo Run del diseño v0.1: no es "opera solo" sino "opera Practical AI, David/Sara consultan y deciden".
+- **No hay política de TI en DACLAF.** Se propone regla mínima de datos (Q10 de la sesión).
+- Material de la sesión: `sesion_2026-10-28/` (HTML interactivo con preguntas en vivo + PPTX de 11 láminas).
+
 ## Propuestas pendientes de decisión del Dr.
 - Modo Build (multi-IA) vs Run (stack mínimo) — recomendación: ambos.
 - Hub Claude + satélites manuales (opción A) para el 18-dic; automatización con Make como fase 2.

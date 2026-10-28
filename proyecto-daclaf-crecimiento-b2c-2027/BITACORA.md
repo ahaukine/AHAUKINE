@@ -5,3 +5,8 @@
 - Creada la carpeta del proyecto con instrucciones de Project, contexto consolidado, snapshot, contrato de intercambio (brief + ledger) y diseño v0.1.
 - Hallazgos clave: (1) el PDF habla de 300 lanzamientos y la reunión de 300 SKUs en cartera, y la diferencia mueve el presupuesto; (2) la afirmación "cuidado personal, tópico y suplementos no requieren registro" necesita matiz regulatorio; (3) nombres de marca mal transcritos.
 - Propuesta: arquitectura de contrato (brief estándar + ledger + compuertas humanas) con modos Build y Run. Pendiente de validación del Dr.
+
+### 28.OCT.2026 (b) — Material para la sesión de las 12:30
+- `sesion_2026-10-28/Daclaf_Sistema_IA_B2C_Sesion_28oct.html`: explicación interactiva del diseño (capas, herramientas y simulador de datos, embudo, ruta, decisiones) + 14 preguntas en vivo con captura de respuestas y exportación a Markdown.
+- `sesion_2026-10-28/Daclaf_Sistema_IA_B2C_Sesion_28oct.pptx`: 11 láminas, preguntas incluidas, notas del orador.
+- Cambio de supuesto: cuentas del Dr., él opera, Project compartido con David; sin política de TI (regla mínima propuesta en Q10).
