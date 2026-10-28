@@ -1,0 +1,584 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UML interactivo · Sistema de inteligencia B2C · DACLAF</title>
+<style>
+:root{--ink:#0f2a2e;--teal:#1d4e54;--teal2:#2a9d8f;--amber:#e8a33d;--rust:#c8553d;--bg:#f4f6f3;--card:#fff;--line:#d9ded6;--mut:#5b6b6e;--r:14px}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Calibri,"Segoe UI",system-ui,sans-serif}
+h1,h2,h3{font-family:Cambria,Georgia,serif;line-height:1.15;margin:0}
+.wrap{max-width:1180px;margin:0 auto;padding:0 20px}
+header{background:var(--ink);color:#fff;padding:34px 0 26px}
+header small{color:var(--amber);letter-spacing:.12em;text-transform:uppercase;font-weight:700;font-size:12.5px}
+header h1{font-size:clamp(26px,4vw,40px);margin:8px 0 8px}
+header p{margin:0;color:#cfe0dc;max-width:760px}
+nav{position:sticky;top:0;z-index:30;background:#12363b}
+nav .wrap{display:flex;gap:2px;overflow-x:auto}
+nav button{background:none;border:0;color:#cfe0dc;padding:14px 16px;font:600 14.5px Calibri;cursor:pointer;white-space:nowrap}
+nav button.on{color:#fff;box-shadow:inset 0 -3px var(--amber)}
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--r);padding:18px}
+.read{margin:22px 0}
+.read ul{margin:8px 0 0;padding-left:20px}
+.read li{margin:4px 0}
+.pane{display:none;padding:18px 0 50px}.pane.on{display:block}
+.pane>h2{font-size:28px;margin:4px 0 4px}
+.lead{color:var(--mut);margin:0 0 14px;max-width:820px}
+.row{display:grid;grid-template-columns:minmax(0,1fr) 320px;gap:16px;align-items:start}
+@media(max-width:980px){.row{grid-template-columns:1fr}}
+.row.one{grid-template-columns:1fr}.row.one .info{position:static}
+.dg{background:#fff;border:1px solid var(--line);border-radius:var(--r);overflow-x:auto}
+.dg svg{display:block;min-width:760px;width:100%;height:auto}
+.info{position:sticky;top:60px}
+.info h3{font-size:20px;margin-bottom:4px}
+.info .tag{display:inline-block;font-size:12px;font-weight:700;border-radius:99px;padding:2px 10px;background:#e5ece7;margin:0 4px 8px 0}
+.info .tag.new{background:#fbe9c8;color:#7a4e07}
+.info p{margin:0 0 8px;font-size:15px}
+.info ul{margin:0 0 8px;padding-left:18px;font-size:14.5px}
+.info dt{font-size:12.5px;color:var(--mut);text-transform:uppercase;letter-spacing:.05em;margin-top:8px}
+.info dd{margin:0;font-size:15px}
+.ctl{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-bottom:12px}
+.btn{border:1px solid var(--line);background:#fff;border-radius:99px;padding:8px 16px;font:700 14px Calibri;cursor:pointer;color:var(--ink)}
+.btn.pri{background:var(--ink);color:#fff;border-color:var(--ink)}
+.btn:disabled{opacity:.4;cursor:default}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:99px;overflow:hidden;background:#fff}
+.seg button{border:0;background:none;padding:8px 15px;font:700 14px Calibri;cursor:pointer;color:var(--ink)}
+.seg button.on{background:var(--teal);color:#fff}
+.legend{font-size:13.5px;color:var(--mut);margin:10px 0 0}
+.legend b{color:var(--ink)}
+.node{cursor:pointer}
+.dim{opacity:.18}
+svg text{font-family:Calibri,"Segoe UI",sans-serif}
+.halo{paint-order:stroke;stroke:#fff;stroke-width:4px;stroke-linejoin:round}
+.mlist{display:grid;gap:8px;margin-top:14px}
+.mi{display:grid;grid-template-columns:44px 1fr auto;gap:10px;align-items:center;background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 12px;cursor:pointer;text-align:left;font:inherit;color:inherit;width:100%}
+.mi.on{border-color:var(--ink);box-shadow:0 0 0 2px var(--ink)}
+.mi b.id{font:700 15px Cambria;background:var(--ink);color:#fff;border-radius:8px;text-align:center;padding:3px 0}
+.mi span.t{font-weight:700}
+.mi small{display:block;color:var(--mut);font-weight:400}
+.pill{font-size:12px;font-weight:700;border-radius:99px;padding:3px 10px;white-space:nowrap}
+.p-ahora{background:#d7efe9;color:#12574e}.p-mvp{background:#fbe9c8;color:#7a4e07}.p-desp{background:#e3e6e4;color:#4a5557}
+.twoc{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:860px){.twoc{grid-template-columns:1fr}}
+.princ{display:grid;gap:10px;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));margin-top:10px}
+.princ div{background:#f4f6f3;border-radius:12px;padding:12px 14px;font-size:15px}
+.princ b{display:block;font-family:Cambria,serif;font-size:16.5px;margin-bottom:2px}
+footer{padding:20px 0 50px;color:var(--mut);font-size:13px}
+@media print{nav,.ctl{display:none}.pane{display:block!important}}
+</style>
+</head>
+<body>
+<header><div class="wrap">
+<small>Practical AI® · Proyecto 3 DACLAF · Documento de trabajo · 28 oct 2026</small>
+<h1>El sistema de inteligencia B2C, en UML</h1>
+<p>Cómo funciona hoy el diseño v0.1 y cómo lo mejoraría si se abre a comentarios. Toque cualquier elemento de cada diagrama.</p>
+</div></header>
+<nav><div class="wrap" id="tabs"></div></nav>
+<main class="wrap">
+
+<div class="card read">
+<h3 style="font-size:20px">Lectura rápida</h3>
+<ul>
+<li><b>Casos de uso:</b> quién hace qué con el sistema. <b>Secuencia:</b> cómo corre un encargo de principio a fin (el piloto post-solar). <b>Estados:</b> el ciclo de vida de una oportunidad y de una evidencia. <b>Clases:</b> el modelo de datos. <b>Arquitectura:</b> componentes de hoy vs los recomendados.</li>
+<li><b>Recomendación en una frase:</b> mantener el hub y convertirlo en un sistema <i>centrado en evidencia</i>: registro estructurado, verificador independiente, pruebas por herramienta y pre-vuelo de datos; y, para abrirlo a comentarios, elementos con ID, versiones congeladas y un triage de cambios.</li>
+<li><b>Honestidad del método:</b> son recomendaciones de diseño basadas en patrones de sistemas multiagente y de gobierno de datos, no en pruebas con estas herramientas. Las capacidades concretas de cada IA <span style="color:var(--rust)">[POR VERIFICAR]</span> con el piloto.</li>
+</ul>
+<p class="legend"><b>Notación:</b> línea con flecha abierta = mensaje o dependencia · línea punteada = retorno o «include» · rombo vacío = agregación · rombo lleno = composición · etiqueta «nuevo» en ámbar = no existe en v0.1.</p>
+</div>
+
+<!-- CASOS DE USO -->
+<section class="pane" id="p-uc">
+<h2>Casos de uso</h2>
+<p class="lead">Quién interactúa con el sistema y para qué. Toque un actor o un caso de uso para ver sus relaciones.</p>
+<div class="row"><div class="dg"><svg id="ucSvg" viewBox="0 0 1000 620"></svg></div><div class="card info" id="ucInfo"></div></div>
+</section>
+
+<!-- SECUENCIA -->
+<section class="pane" id="p-seq">
+<h2>Secuencia: un encargo de principio a fin</h2>
+<p class="lead">Ejemplo real: el piloto post-solar, desde la solicitud hasta la decisión en Compuerta 1. Avance paso a paso.</p>
+<div class="ctl">
+<div class="seg" id="seqMode"><button data-m="0" class="on">Hoy (v0.1)</button><button data-m="1">Recomendada (v1.0)</button></div>
+<button class="btn" id="sPrev">◀ Anterior</button><button class="btn pri" id="sNext">Siguiente ▶</button><button class="btn" id="sPlay">▶ Reproducir</button><span id="sCnt" style="font-weight:700"></span>
+</div>
+<div class="card info" id="seqInfo" style="position:static;margin-bottom:12px"></div>
+<div class="dg"><svg id="seqSvg" viewBox="0 0 1000 900"></svg></div>
+</section>
+
+<!-- ESTADOS -->
+<section class="pane" id="p-st">
+<h2>Diagramas de estados</h2>
+<p class="lead">El ciclo de vida de una oportunidad (del Acelerador de Lanzamientos) y el de una evidencia (el contrato de intercambio). Toque un estado.</p>
+<div class="ctl"><div class="seg" id="stMode"><button data-m="op" class="on">Oportunidad</button><button data-m="ev">Evidencia</button></div></div>
+<div class="row"><div class="dg"><svg id="stSvg" viewBox="0 0 1000 480"></svg></div><div class="card info" id="stInfo"></div></div>
+</section>
+
+<!-- CLASES -->
+<section class="pane" id="p-cl">
+<h2>Modelo de datos (clases)</h2>
+<p class="lead">Las entidades del sistema y cómo se relacionan. Toque una clase para resaltar sus conexiones.</p>
+<div class="row"><div class="dg"><svg id="clSvg" viewBox="0 0 1000 800"></svg></div><div class="card info" id="clInfo"></div></div>
+</section>
+
+<!-- ARQUITECTURA -->
+<section class="pane" id="p-ar">
+<h2>Arquitectura de componentes: hoy vs recomendada</h2>
+<p class="lead">Cambie entre el diseño v0.1 y la arquitectura recomendada v1.0. Toque un componente o una mejora para ver qué resuelve.</p>
+<div class="ctl"><div class="seg" id="arMode"><button data-m="0">v0.1 · hoy</button><button data-m="1" class="on">v1.0 · recomendada</button></div></div>
+<div class="row one"><div class="dg"><svg id="arSvg" viewBox="0 0 1000 620"></svg></div><div class="card info" id="arInfo"></div></div>
+
+<h3 style="font-size:22px;margin:26px 0 4px">Qué mejoraría, y en qué orden</h3>
+<p class="lead">Impacto contra esfuerzo. Verde: núcleo antes del 18-dic · ámbar: versión mínima ahora, completa después · gris: después.</p>
+<div class="twoc"><div class="dg"><svg id="mxSvg" viewBox="0 0 520 400" style="min-width:420px"></svg></div><div id="mxInfo" class="card"></div></div>
+<div class="mlist" id="mlist"></div>
+
+<div class="card" style="margin-top:22px">
+<h3 style="font-size:21px">Si se abre a comentarios</h3>
+<p style="margin:6px 0 0;color:var(--mut)">Abrir un sistema a comentarios es un problema de arquitectura, no de interfaz: sin estas cinco piezas, los comentarios se pierden o contradicen versiones.</p>
+<div class="princ">
+<div><b>1 · Todo es direccionable</b>Oportunidades, evidencias y fichas tienen ID (OP-###, EV-###, CR-###). Un comentario siempre apunta a un ID.</div>
+<div><b>2 · Versiones congeladas</b>Cada ranking y cada ficha se publica como una versión inmutable. Se comenta sobre una versión; los cambios generan la siguiente.</div>
+<div><b>3 · Roles y alcance</b>Lector, comentarista y editor. Los niveles N2 y N3 solo se ven en vistas de editor o en el Project compartido.</div>
+<div><b>4 · Triage con trazabilidad</b>Comentario → solicitud de cambio → aceptada, rechazada o pospuesta, con la razón y el responsable. Nada se resuelve en silencio.</div>
+<div><b>5 · Datos aparte de la narrativa</b>El registro de evidencia y el modelo son la fuente; documentos y tableros son derivados. Un comentario no edita la fuente sin pasar por triage.</div>
+</div>
+<p style="margin:12px 0 0"><b>Versión mínima viable hoy:</b> comentarios en el documento compartido citando el ID, y una lista de solicitudes de cambio revisada por el operador en cada sesión. Claude puede publicar páginas como Artifact con hilos de comentarios <span style="color:var(--rust)">[POR VERIFICAR disponibilidad y permisos en su plan y para David y Sara]</span>. El triage automático es fase 2.</p>
+</div>
+</section>
+</main>
+<footer><div class="wrap">Practical AI® · Documento de trabajo generado con asistencia de IA · Requiere validación de la persona responsable · Confidencial, uso interno</div></footer>
+
+<script>
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const NS='http://www.w3.org/2000/svg';
+const C={ink:'#0f2a2e',teal:'#1d4e54',teal2:'#2a9d8f',amber:'#e8a33d',amberD:'#b9770e',rust:'#c8553d',mut:'#5b6b6e',line:'#9aa8a4',bg:'#f4f6f3',soft:'#eef2ee'};
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+function S(tag,a,p){const e=document.createElementNS(NS,tag);for(const k in (a||{}))e.setAttribute(k,a[k]);if(p)p.appendChild(e);return e}
+function txt(p,x,y,str,o={}){const n=String(str).split('\n'),lh=o.lh||14,s=o.s||12;
+ const y0=o.mid?y-(n.length-1)*lh/2+s*0.35:y;
+ const t=S('text',{x,y:y0,'text-anchor':o.a||'middle','font-size':s,'font-weight':o.b?700:400,fill:o.f||C.ink},p);
+ if(o.halo)t.setAttribute('class','halo');if(o.i)t.setAttribute('font-style','italic');
+ n.forEach((ln,i)=>{const ts=S('tspan',{x,dy:i?lh:0},t);ts.textContent=ln});return t}
+function mk(d,id,path,attrs,rx,ry,w,h){const m=S('marker',{id,viewBox:`0 0 ${w} ${h}`,refX:rx,refY:ry,markerWidth:w,markerHeight:h,markerUnits:'userSpaceOnUse',orient:'auto'},d);S('path',Object.assign({d:path},attrs),m)}
+function defs(svg){const d=S('defs',{},svg);const P=svg.id+'-';const cols={n:C.mut,h:C.teal,a:C.amberD};
+ for(const c in cols){const col=cols[c];
+  mk(d,P+'arr-'+c,'M1,1 L9,5 L1,9',{fill:'none',stroke:col,'stroke-width':1.6},9,5,10,10);
+  mk(d,P+'tri-'+c,'M0,0 L10,5 L0,10 z',{fill:col},10,5,10,10);
+  mk(d,P+'dia-'+c,'M0,5 L7,1 L14,5 L7,9 z',{fill:'#fff',stroke:col,'stroke-width':1.3},0,5,14,10);
+  mk(d,P+'diaf-'+c,'M0,5 L7,1 L14,5 L7,9 z',{fill:col,stroke:col,'stroke-width':1.3},0,5,14,10);}}
+function ln(p,pts,o={}){const e=S('polyline',{points:pts.map(q=>q.join(',')).join(' '),fill:'none',stroke:o.col||C.mut,'stroke-width':o.w||1.4},p);
+ if(o.dash)e.setAttribute('stroke-dasharray',o.dash);const c=o.c||'n';
+ const px=((p.ownerSVGElement||p).id)+'-';if(o.mk)e.setAttribute('marker-end',`url(#${px}${o.mk}-${c})`);if(o.ms)e.setAttribute('marker-start',`url(#${px}${o.ms}-${c})`);return e}
+function setMk(e,c){['marker-end','marker-start'].forEach(a=>{const v=e.getAttribute(a);if(v)e.setAttribute(a,v.replace(/-[nha]\)$/,`-${c})`))})}
+function clipRect(cx,cy,w,h,dx,dy){const ax=Math.abs(dx)||1e-6,ay=Math.abs(dy)||1e-6;const t=Math.min((w/2)/ax,(h/2)/ay);return[cx+dx*t,cy+dy*t]}
+function clipEll(cx,cy,rx,ry,vx,vy){const k=1/Math.sqrt((vx/rx)**2+(vy/ry)**2);return[cx+vx*k,cy+vy*k]}
+function info(el,h){el.innerHTML=h}
+function dl(rows){return '<dl>'+rows.filter(r=>r[1]).map(r=>`<dt>${esc(r[0])}</dt><dd>${r[1]}</dd>`).join('')+'</dl>'}
+
+/* ---------- tabs ---------- */
+const TABS=[['uc','Casos de uso'],['seq','Secuencia'],['st','Estados'],['cl','Clases'],['ar','Arquitectura y mejoras']];
+$('#tabs').innerHTML=TABS.map(t=>`<button data-t="${t[0]}">${t[1]}</button>`).join('');
+function showTab(t){$$('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.t===t));$$('.pane').forEach(p=>p.classList.toggle('on',p.id==='p-'+t));try{history.replaceState(null,'','#'+t)}catch(e){}}
+$$('#tabs button').forEach(b=>b.onclick=()=>showTab(b.dataset.t));
+
+/* ================= CASOS DE USO ================= */
+const UC={
+ actors:[
+  {id:'dec',n:'Decisor\nDavid y Sara',x:70,y:140,d:'Fijan metas y pesos del scoring y deciden en las tres compuertas. Ven los resultados en el Project compartido; no operan las herramientas.'},
+  {id:'op',n:'Operador\nDr. Cervantes',x:70,y:340,d:'Ejecuta los briefs en las IA externas, ingresa y verifica la evidencia, mantiene el registro y la bitácora. Hoy es el único con cuentas en las herramientas.'},
+  {id:'dat',n:'Dueño de datos\nSistemas / Contraloría',x:70,y:530,d:'Entrega el maestro de artículos de NetSuite (DF y DAS) y las ventas por SKU. Son datos internos (N2/N3).'},
+  {id:'reg',n:'Asuntos\nRegulatorios',x:930,y:130,d:'Valida el carril (A, B o C) y los claims. El sistema propone, pero no sustituye su criterio.'},
+  {id:'ops',n:'Operaciones\ny Compras',x:930,y:240,d:'Aportan capacidad de Lerma, maquiladores calificados y costos de maquila para la decisión Hacer, Maquilar o Asociarse.'},
+  {id:'fin',n:'Finanzas',x:930,y:350,d:'Define rangos y tolerancias del Presupuesto 2027 y revisa los escenarios.'},
+  {id:'rev',n:'Revisores\n(comentarios)',x:930,y:530,nw:1,d:'Nuevo en v1.0. Cualquier persona con rol comentarista puede comentar elementos con ID; sus comentarios se convierten en solicitudes de cambio.'}],
+ ucs:[
+  {id:'u1',n:'Definir metas\ny pesos',x:350,y:100,a:['dec'],d:'David y Sara definen qué cuenta como SKU, el plazo y los pesos de los criterios de calificación. El sistema propone; ellos fijan.'},
+  {id:'u8',n:'Decidir en\ncompuertas',x:350,y:190,a:['dec'],d:'Compuerta 1 (¿vale explorarlo?), 2 (¿lo desarrollamos?) y 3 (¿sale al mercado?). Cada decisión queda registrada con fecha y responsable.'},
+  {id:'u7',n:'Priorizar\noportunidades',x:350,y:280,a:['op','dec'],d:'Califica cada oportunidad con los criterios acordados y propone un ranking y una lista corta. Requiere evidencia registrada.'},
+  {id:'u3',n:'Ejecutar briefs\nde investigación',x:350,y:380,a:['op'],d:'Genera el brief estándar, lo corre en Perplexity, Genspark, Manus u otras y recoge las salidas.'},
+  {id:'u2',n:'Entregar línea\nbase de datos',x:350,y:530,a:['dat'],d:'Maestro de artículos y ventas por SKU. Sin esto no hay punto de partida confiable; el catálogo web no lo sustituye.'},
+  {id:'u5',n:'Validar carril\nregulatorio',x:650,y:130,a:['reg'],d:'Confirma o ajusta el carril y detecta claims que podrían reclasificar el producto.'},
+  {id:'u6',n:'Evaluar Hacer,\nMaquilar o Asociar',x:650,y:240,a:['ops'],d:'Cruza capacidad de planta, maquila, licencia de dossier y collabs para cada candidato.'},
+  {id:'u9',n:'Construir\nPresupuesto 2027',x:650,y:340,a:['fin','op'],d:'Convierte el pipeline en escenarios de inversión: desarrollo, registros e inventario inicial.'},
+  {id:'u4',n:'Registrar y verificar\nevidencia',x:650,y:440,a:['op'],d:'Toda cifra externa entra al registro con fuente, fecha y confianza A, B o C. Es el caso de uso que sostiene a los demás.'},
+  {id:'u10',n:'Comentar y solicitar\ncambios',x:650,y:530,a:['rev'],nw:1,d:'Nuevo en v1.0. Comentarios sobre elementos con ID y versión; el operador los clasifica y los convierte en solicitudes de cambio.'}],
+ inc:[['u3','u4'],['u7','u4'],['u9','u7']]
+};
+const uc={a:{},u:{},l:[],i:[],sel:null};
+function ucInit(){
+ const svg=$('#ucSvg');defs(svg);
+ S('rect',{x:200,y:36,width:600,height:560,rx:12,fill:'#fff',stroke:C.line,'stroke-dasharray':'5 4'},svg);
+ txt(svg,500,60,'Sistema de inteligencia B2C · DACLAF',{s:14,b:1,f:C.teal});
+ const gL=S('g',{},svg),gN=S('g',{},svg);
+ const U={};UC.ucs.forEach(u=>U[u.id]=u);
+ UC.inc.forEach(([a,b])=>{const A=U[a],B=U[b];const v=[B.x-A.x,B.y-A.y];const p1=clipEll(A.x,A.y,105,28,v[0],v[1]),p2=clipEll(B.x,B.y,105,28,-v[0],-v[1]);
+  const e=ln(gL,[p1,p2],{dash:'5 4',mk:'arr',c:'n'});txt(gL,(p1[0]+p2[0])/2,(p1[1]+p2[1])/2-4,'«include»',{s:11,f:C.mut,halo:1});uc.i.push({a,b,e})});
+ UC.actors.forEach(a=>a.id&&UC.ucs.forEach(u=>{if(u.a.includes(a.id)){const v=[u.x-a.x,u.y-a.y];const p2=clipEll(u.x,u.y,105,28,-v[0],-v[1]);const e=ln(gL,[[a.x,a.y-6],p2],{c:'n',w:1.3});uc.l.push({a:a.id,u:u.id,e})}}));
+ UC.actors.forEach(a=>{const g=S('g',{class:'node'},gN);const col=a.nw?C.amberD:C.ink;
+  S('circle',{cx:a.x,cy:a.y-30,r:9,fill:'#fff',stroke:col,'stroke-width':2},g);
+  ln(g,[[a.x,a.y-21],[a.x,a.y+4]],{col,w:2});ln(g,[[a.x-14,a.y-14],[a.x+14,a.y-14]],{col,w:2});ln(g,[[a.x,a.y+4],[a.x-12,a.y+20]],{col,w:2});ln(g,[[a.x,a.y+4],[a.x+12,a.y+20]],{col,w:2});
+  txt(g,a.x,a.y+36,a.n,{s:12,b:1,lh:13});
+  S('rect',{x:a.x-60,y:a.y-45,width:120,height:100,fill:'transparent'},g);
+  if(a.nw)txt(g,a.x,a.y-48,'nuevo',{s:11,b:1,f:C.amberD});
+  g.onclick=()=>ucSel('a',a.id);uc.a[a.id]=g});
+ UC.ucs.forEach(u=>{const g=S('g',{class:'node'},gN);
+  S('ellipse',{cx:u.x,cy:u.y,rx:105,ry:28,fill:u.nw?'#fff6e3':C.soft,stroke:u.nw?C.amberD:C.teal,'stroke-width':1.6},g);
+  txt(g,u.x,u.y,u.n,{s:12.5,mid:1,lh:14,b:1});
+  if(u.nw)txt(g,u.x+78,u.y-20,'nuevo',{s:11,b:1,f:C.amberD});
+  g.onclick=()=>ucSel('u',u.id);uc.u[u.id]=g});
+ ucSel(null);
+}
+function ucSel(t,id){
+ uc.sel=t?[t,id]:null;let hA=new Set(),hU=new Set();
+ if(!t){UC.actors.forEach(a=>hA.add(a.id));UC.ucs.forEach(u=>hU.add(u.id))}
+ else if(t==='a'){hA.add(id);UC.ucs.filter(u=>u.a.includes(id)).forEach(u=>{hU.add(u.id);UC.inc.forEach(([x,y])=>{if(x===u.id)hU.add(y)})})}
+ else{hU.add(id);const u=UC.ucs.find(q=>q.id===id);u.a.forEach(a=>hA.add(a));UC.inc.forEach(([x,y])=>{if(x===id)hU.add(y);if(y===id)hU.add(x)})}
+ for(const k in uc.a)uc.a[k].classList.toggle('dim',!hA.has(k));
+ for(const k in uc.u)uc.u[k].classList.toggle('dim',!hU.has(k));
+ uc.l.forEach(l=>{const on=hA.has(l.a)&&hU.has(l.u)&&(!t||(t==='a'?l.a===id:true));l.e.classList.toggle('dim',!on);setMk(l.e,on&&t?'h':'n');l.e.setAttribute('stroke',on&&t?C.teal:C.mut)});
+ uc.i.forEach(l=>{const on=hU.has(l.a)&&hU.has(l.b);l.e.classList.toggle('dim',!on)});
+ const box=$('#ucInfo');
+ if(!t)info(box,'<h3>Elija un actor o caso de uso</h3><p>El sistema tiene siete tipos de participantes. Los casos de uso <b>Registrar y verificar evidencia</b> y <b>Priorizar</b> son el núcleo: todo lo demás depende de ellos.</p><p style="color:var(--mut)">Las líneas punteadas «include» indican que un caso de uso siempre invoca a otro.</p>');
+ else if(t==='a'){const a=UC.actors.find(q=>q.id===id);info(box,`<h3>${esc(a.n.replace('\n',' · '))}</h3>${a.nw?'<span class="tag new">nuevo en v1.0</span>':''}<p>${esc(a.d)}</p><dl><dt>Participa en</dt><dd><ul>${UC.ucs.filter(u=>u.a.includes(id)).map(u=>`<li>${esc(u.n.replace('\n',' '))}</li>`).join('')}</ul></dd></dl>`)}
+ else{const u=UC.ucs.find(q=>q.id===id);const inc=UC.inc.filter(x=>x[0]===id).map(x=>UC.ucs.find(q=>q.id===x[1]).n.replace('\n',' '));const by=UC.inc.filter(x=>x[1]===id).map(x=>UC.ucs.find(q=>q.id===x[0]).n.replace('\n',' '));
+  info(box,`<h3>${esc(u.n.replace('\n',' '))}</h3>${u.nw?'<span class="tag new">nuevo en v1.0</span>':''}<p>${esc(u.d)}</p>`+dl([['Actores',u.a.map(a=>esc(UC.actors.find(q=>q.id===a).n.replace('\n',' '))).join(' · ')],['Incluye',inc.map(esc).join(' · ')],['Es incluido por',by.map(esc).join(' · ')]]))}
+}
+$('#ucSvg').addEventListener('click',e=>{if(e.target===$('#ucSvg'))ucSel(null)});
+
+/* ================= SECUENCIA ================= */
+const SQ={
+ P:{op:'Operador\n(Dr. Cervantes)',cl:'Claude\n(orquestador)',pe:'Perplexity',gs:'Genspark',ver:'Verificador\n(Claude, 2.º paso)',led:'Ledger de\nevidencia',reg:'Asuntos\nRegulatorios',dec:'David y Sara\n(decisores)'},
+ ord:{0:['op','cl','pe','gs','led','reg','dec'],1:['op','cl','pe','gs','ver','led','reg','dec']},
+ frag:{par:'par  [en paralelo]',alt0:'alt  [hay contradicción o dato sin fuente]',alt1:'alt  [el verificador no pudo resolver]'},
+ M:[
+ {f:'op',t:'cl',l:'Pide el piloto post-solar',md:'a',d:'El operador pide arrancar la oportunidad post-solar como extensión de la marca ancla de protección solar.'},
+ {f:'cl',t:'cl',l:'Pre-vuelo manual: confirma\nque todo es N1 y arma el brief',md:'0',d:'Claude revisa con una lista que el brief no contenga ventas, costos ni presupuesto (N2/N3) y lo arma con la plantilla estándar. Hoy depende de la disciplina del operador.'},
+ {f:'cl',t:'cl',l:'Pre-vuelo obligatorio (N1/N2/N3)\n+ el Router elige herramientas',md:'1',nw:1,d:'El pre-vuelo es una puerta: sin la casilla N1 firmada y registrada, el brief no sale. El Router aplica las reglas de enrutamiento y propone qué herramientas corren.'},
+ {f:'cl',t:'op',l:'Brief estándar (A, B, C y Genspark)',k:'r',md:'a',d:'Claude entrega los prompts listos: tres secuenciales para Perplexity y uno general para Genspark.'},
+ {f:'op',t:'pe',l:'Pega los prompts A, B y C',frag:'par',md:'a',d:'El operador abre ambas herramientas a la vez y registra la hora de inicio.'},
+ {f:'op',t:'gs',l:'Pega el brief único',frag:'par',md:'a',d:'Mismo encargo, otra herramienta. Es lo que hace comparable el piloto.'},
+ {f:'pe',t:'op',l:'Tablas con citas',k:'r',frag:'par',md:'a',d:'Perplexity devuelve las tablas con fuentes citadas.'},
+ {f:'gs',t:'op',l:'Hoja de cálculo descargable',k:'r',frag:'par',md:'a',d:'Genspark devuelve el libro con hojas de mercado, oferta, brechas y regulatorio.'},
+ {f:'op',t:'cl',l:'Sube las salidas al Project',md:'a',d:'Las salidas entran al Project compartido. Todavía no son evidencia: son material sin verificar.'},
+ {f:'cl',t:'led',l:'Normaliza y registra EV-###',md:'a',d:'Cada afirmación se convierte en una fila del registro con valor, fuente, fecha, herramienta y confianza provisional C.'},
+ {f:'cl',t:'ver',l:'Verifica citas: abre cada URL\ny compara el dato',md:'1',nw:1,d:'Un paso independiente abre las fuentes y comprueba que el dato aparezca. Quien genera no valida: evita que una IA confirme su propia salida.'},
+ {f:'ver',t:'cl',l:'Informe: verificadas / fallidas',k:'r',md:'1',nw:1,d:'Entrega la lista de filas confirmadas, no encontradas o con diferencias. Un dato que no aparece en su fuente cuenta como alucinación.'},
+ {f:'cl',t:'cl',l:'Triangula y asigna\nconfianza A, B o C',md:'a',d:'Compara herramientas, detecta contradicciones y asigna A (fuente primaria o dos independientes), B (una fuente sólida) o C (sin verificar).'},
+ {f:'cl',t:'op',l:'Lista de 10 filas para verificar a mano',frag:'alt0',md:'0',d:'Hoy la verificación es una muestra manual: 10 filas al azar por herramienta.'},
+ {f:'op',t:'cl',l:'Resultado de la verificación',k:'r',frag:'alt0',md:'0',d:'El operador marca cada fila: coincide, no aparece o difiere.'},
+ {f:'cl',t:'op',l:'Solo las discrepancias sin resolver',frag:'alt1',md:'1',nw:1,d:'El operador solo ve lo que el verificador no pudo resolver, no todo el material.'},
+ {f:'op',t:'cl',l:'Resolución de cada caso',k:'r',frag:'alt1',md:'1',nw:1,d:'Se confirma, se corrige o se descarta cada dato.'},
+ {f:'cl',t:'reg',l:'Pide validar carril y claims',md:'a',d:'Se envía a Asuntos Regulatorios la lista de claims y la propuesta de carril. Es una pausa humana obligatoria.'},
+ {f:'reg',t:'cl',l:'Carril confirmado o ajustado',k:'r',md:'a',d:'Regulatorio responde. Cualquier conclusión sanitaria queda registrada como suya, no del sistema.'},
+ {f:'cl',t:'led',l:'Registra tiempo, costo y\ncalidad por herramienta',md:'1',nw:1,d:'Alimenta las pruebas por herramienta: qué tan exacta, cuánto tardó y cuánto costó cada una.'},
+ {f:'cl',t:'op',l:'Puntaje y ficha de Compuerta 1 (borrador)',k:'r',md:'a',d:'Con evidencia verificada y carril confirmado se califica la oportunidad y se arma la ficha de una página.'},
+ {f:'op',t:'dec',l:'Presenta la ficha',md:'a',d:'David y Sara reciben la ficha con evidencia trazable, no un texto sin fuentes.'},
+ {f:'dec',t:'op',l:'Decide: aprobar · ajustar · detener',k:'r',md:'a',d:'La decisión es humana. Es el único punto donde el sistema avanza o se detiene.'},
+ {f:'op',t:'cl',l:'Registra la decisión',md:'a',d:'Se anota quién decidió, cuándo y con qué evidencia.'},
+ {f:'cl',t:'led',l:'Actualiza el estado de la oportunidad',md:'0',d:'La oportunidad cambia de estado en el registro.'},
+ {f:'cl',t:'led',l:'Actualiza estado y congela\nla versión del ranking',md:'1',nw:1,d:'Además de actualizar el estado, se congela la versión sobre la que se decidió, para que futuros comentarios apunten a algo inmutable.'},
+ {f:'dec',t:'cl',l:'Comenta sobre OP-### o EV-###',md:'1',nw:1,d:'Un revisor comenta un elemento con ID y versión. En v0.1 esto ocurre por fuera, en chat o correo, y se pierde.'},
+ {f:'cl',t:'cl',l:'Triage → solicitud de cambio CR-###',md:'1',nw:1,d:'El comentario se clasifica: aceptado, rechazado o pospuesto, con razón y responsable. Si procede, genera la siguiente versión.'}]
+};
+const sq={mode:0,cur:0,timer:null};
+function sqList(){return SQ.M.filter(m=>m.md==='a'||m.md===String(sq.mode))}
+function sqDraw(){
+ const svg=$('#seqSvg');svg.innerHTML='';defs(svg);
+ const ord=SQ.ord[sq.mode],n=ord.length,X={};ord.forEach((p,i)=>X[p]=70+i*(860/(n-1)));
+ const M=sqList(),y0=125,st=40,H=y0+M.length*st+30;svg.setAttribute('viewBox',`0 0 1000 ${H}`);
+ ord.forEach(p=>{S('rect',{x:X[p]-58,y:10,width:116,height:46,rx:8,fill:p==='op'||p==='dec'||p==='reg'?'#fff6e3':C.teal,stroke:p==='op'||p==='dec'||p==='reg'?C.amberD:C.teal,'stroke-width':1.5},svg);
+  txt(svg,X[p],33,SQ.P[p],{s:11.5,b:1,mid:1,lh:13,f:p==='op'||p==='dec'||p==='reg'?C.ink:'#fff'});
+  S('line',{x1:X[p],y1:56,x2:X[p],y2:H-10,stroke:C.line,'stroke-dasharray':'4 4'},svg)});
+ // fragments
+ const seen={};M.forEach((m,i)=>{if(m.frag){(seen[m.frag]=seen[m.frag]||[]).push(i)}});
+ for(const f in seen){const a=seen[f][0],b=seen[f][seen[f].length-1];const ya=y0+a*st-27,yb=y0+b*st+16;
+  S('rect',{x:34,y:ya,width:932,height:yb-ya,fill:'none',stroke:C.mut,'stroke-dasharray':'6 3','stroke-width':1.1,rx:4},svg);
+  S('rect',{x:34,y:ya,width:(SQ.frag[f].length*6.2+18),height:14,fill:C.soft,stroke:C.mut,'stroke-width':1},svg);
+  txt(svg,42,ya+11,SQ.frag[f],{s:11,b:1,a:'start',f:C.mut})}
+ sq.els=[];
+ M.forEach((m,i)=>{const y=y0+i*st,g=S('g',{class:'node'},svg),col=m.nw&&sq.mode===1?C.amberD:C.mut;
+  const x1=X[m.f],x2=X[m.t];let line;
+  if(m.f===m.t){line=S('path',{d:`M${x1},${y-6} h46 v18 h-46`,fill:'none',stroke:col,'stroke-width':1.5,'marker-end':`url(#seqSvg-arr-${m.nw&&sq.mode===1?'a':'n'})`},g);txt(g,x1+54,y+2,m.l,{s:11.5,a:'start',lh:12,mid:1,halo:1})}
+  else{line=ln(g,[[x1,y],[x2,y]],{col,mk:'arr',c:m.nw&&sq.mode===1?'a':'n',dash:m.k==='r'?'6 4':null,w:1.5});
+   txt(g,(x1+x2)/2,y-5,m.l.replace('\n',' · '),{s:11.5,halo:1,f:C.ink})}
+  txt(g,16,y+4,String(i+1),{s:11,b:1,f:C.mut});
+  S('rect',{x:10,y:y-17,width:980,height:34,fill:'transparent'},g);
+  g.onclick=()=>{sq.cur=i;sqUpd()};sq.els.push(g)});
+}
+function sqUpd(){
+ const M=sqList();sq.els.forEach((g,i)=>{g.style.opacity=i<=sq.cur?1:.22;const pl=g.querySelector('polyline,path');if(pl)pl.setAttribute('stroke-width',i===sq.cur?3.4:1.5);
+  if(i===sq.cur&&pl)pl.setAttribute('stroke',C.rust);else if(pl)pl.setAttribute('stroke',M[i].nw&&sq.mode===1?C.amberD:C.mut)});
+ const m=M[sq.cur];$('#sCnt').textContent=`Paso ${sq.cur+1} de ${M.length}`;
+ $('#sPrev').disabled=sq.cur===0;$('#sNext').disabled=sq.cur===M.length-1;
+ const nm=p=>SQ.P[p].replace('\n',' ');
+ info($('#seqInfo'),`<h3>${sq.cur+1}. ${esc(m.l.replace(/\n/g,' '))}</h3>${m.nw&&sq.mode===1?'<span class="tag new">nuevo en v1.0</span>':''}<span class="tag">${esc(nm(m.f))} → ${esc(nm(m.t))}</span>${m.frag?`<span class="tag">${esc(SQ.frag[m.frag])}</span>`:''}<p>${esc(m.d)}</p>`);
+ }
+function sqStop(){if(sq.timer){clearInterval(sq.timer);sq.timer=null;$('#sPlay').textContent='▶ Reproducir'}}
+$('#sPrev').onclick=()=>{sqStop();sq.cur=Math.max(0,sq.cur-1);sqUpd()};
+$('#sNext').onclick=()=>{sqStop();sq.cur=Math.min(sqList().length-1,sq.cur+1);sqUpd()};
+$('#sPlay').onclick=()=>{if(sq.timer){sqStop();return}sq.cur=0;sqUpd();$('#sPlay').textContent='❚❚ Pausar';sq.timer=setInterval(()=>{if(sq.cur>=sqList().length-1){sqStop();return}sq.cur++;sqUpd()},1900)};
+$$('#seqMode button').forEach(b=>b.onclick=()=>{sqStop();sq.mode=+b.dataset.m;sq.cur=0;$$('#seqMode button').forEach(x=>x.classList.toggle('on',x===b));sqDraw();sqUpd()});
+
+/* ================= ESTADOS ================= */
+const ST={
+ op:{states:[
+  {id:'st',k:'start',x:30,y:165},
+  {id:'s1',n:'Idea',x:70,y:140,w:120,h:50,q:'Una oportunidad entra a la lista larga con una ficha mínima.',who:'Operador, con insumos de David y Sara',ev:'Ficha de una línea y carril tentativo',ia:'Genspark y Perplexity (universo, etapa E1)'},
+  {id:'s2',n:'Evaluada',x:230,y:140,w:120,h:50,q:'Tiene evidencia registrada, carril validado y puntaje.',who:'Operador; Asuntos Regulatorios valida el carril',ev:'Filas EV-### con confianza A o B, matriz Hacer/Maquilar/Asociar',ia:'Perplexity, Manus, NotebookLM, Claude (E2 a E5)'},
+  {id:'s3',n:'Lista corta',x:390,y:140,w:120,h:50,q:'Superó el umbral de puntaje y espera la Compuerta 1.',who:'David y Sara fijan el umbral',ev:'Ranking con versión congelada',ia:'Claude (scoring) y segunda opinión'},
+  {id:'s4',n:'En exploración',x:550,y:140,w:120,h:50,q:'Aprobada en Compuerta 1: se prepara el caso de negocio, la viabilidad regulatoria, el proveedor y el costo estimado.',who:'Célula del acelerador',ev:'Caso de negocio, viabilidad regulatoria, proveedor y costo',ia:'Claude y las IA de investigación'},
+  {id:'s5',n:'En desarrollo',x:710,y:140,w:120,h:50,q:'Aprobada en Compuerta 2: se desarrolla fórmula, empaque y registro.',who:'Desarrollo, Regulatorio, Compras, Diseño',ev:'Producto aprobado, empaque final, alta en sistemas',ia:'Fuera del alcance del sistema; este solo recibe el estado'},
+  {id:'s6',n:'Lanzada',x:710,y:330,w:120,h:50,q:'Aprobada en Compuerta 3: sale al mercado en una ola trimestral.',who:'Dirección General y Comercial',ev:'Plan comercial y alta en NetSuite',ia:'Seguimiento en tablero'},
+  {id:'s7',n:'En seguimiento',x:550,y:330,w:120,h:50,q:'Corre el periodo para medir el criterio de éxito a 6 y 12 meses.',who:'Marketing y Finanzas',ev:'Ventas, margen y rotación frente al criterio',ia:'Claude sobre exports de NetSuite'},
+  {id:'s8',n:'Activa',x:390,y:330,w:120,h:50,q:'Cumplió el criterio de éxito y sigue en el portafolio.',who:'Dirección General',ev:'Reporte de supervivencia a 12 meses',ia:'Tablero'},
+  {id:'s9',n:'Descontinuada',x:230,y:330,w:120,h:50,k:'final',q:'No cumplió el criterio o terminó su ciclo. Salida ordenada que libera inventario y artículos en NetSuite.',who:'Dirección General',ev:'Plan de salida de inventario',ia:'Tablero'},
+  {id:'s10',n:'Detenida',x:390,y:25,w:140,h:46,k:'final',q:'Rechazada en una compuerta o descartada. Queda archivada con la razón, para no repetir el análisis.',who:'David y Sara',ev:'Decisión registrada con razón',ia:'Registro de decisiones'}],
+  tr:[
+  {f:'st',t:'s1',l:''},
+  {f:'s1',t:'s2',l:'brief\nejecutado\n(E1–E3)'},
+  {f:'s2',t:'s3',l:'puntaje ≥\numbral (E5)'},
+  {f:'s3',t:'s4',l:'Compuerta\n1 ✓'},
+  {f:'s4',t:'s5',l:'Compuerta\n2 ✓'},
+  {f:'s5',t:'s6',l:'Compuerta\n3 ✓'},
+  {f:'s6',t:'s7',l:'primeras\nventas'},
+  {f:'s7',t:'s8',l:'cumple\ncriterio\n6 y 12 m'},
+  {f:'s8',t:'s9',l:'fin de\nciclo'},
+  {f:'s7',t:'s9',l:'no cumple (regla de salida)',c:95},
+  {f:'s3',t:'s2',l:'ajustar y\nre-evaluar',c:-52},
+  {f:'s1',t:'s10',l:'descartada'},
+  {f:'s3',t:'s10',l:'✗ C1'},
+  {f:'s4',t:'s10',l:'✗ C2'},
+  {f:'s5',t:'s10',l:'✗ C3'}]},
+ ev:{states:[
+  {id:'st',k:'start',x:30,y:165},
+  {id:'e1',n:'Capturada',x:70,y:140,w:120,h:50,q:'La salida de una IA llega al Project como material sin verificar.',who:'Operador',ev:'Archivo o tabla de la herramienta',ia:'Perplexity, Genspark, Manus, GPT'},
+  {id:'e2',n:'Normalizada',x:230,y:140,w:120,h:50,q:'Se convirtió en filas del registro con el formato estándar y un ID EV-###.',who:'Claude',ev:'Fila con afirmación, valor, unidad, fuente, fecha y herramienta',ia:'Claude'},
+  {id:'e3',n:'En verificación',x:390,y:140,w:120,h:50,q:'Se comprueba que el dato aparezca en la fuente y se compara con otras herramientas.',who:'Verificador independiente (muestreo manual en v0.1)',ev:'Informe de verificación',ia:'Claude como verificador; el operador en la muestra manual'},
+  {id:'e4',n:'Verificada\nA · B · C',x:550,y:140,w:120,h:50,q:'Tiene nivel de confianza: A (fuente primaria o dos independientes), B (una fuente sólida) o C (sin verificar).',who:'Claude asigna; el operador confirma',ev:'Campo confianza',ia:'Claude'},
+  {id:'e5',n:'Usada en ficha',x:710,y:140,w:120,h:50,q:'Se cita en una ficha de Compuerta 1 o en el presupuesto. Solo A y B pueden sustentar una decisión.',who:'Operador',ev:'Referencias EV-### en la ficha',ia:'Claude'},
+  {id:'e6',n:'Caducada',x:710,y:330,w:120,h:50,q:'La fecha de la fuente supera los 12 meses y debe reconfirmarse antes de usarla otra vez.',who:'Claude (alerta); operador decide',ev:'Fecha de la fuente',ia:'Claude'},
+  {id:'e7',n:'Archivada',x:550,y:330,w:120,h:50,k:'final',q:'Sale de uso pero se conserva como histórico. Nunca se borra.',who:'Operador',ev:'—',ia:'—'},
+  {id:'e8',n:'Contradicha',x:390,y:330,w:120,h:50,q:'Dos fuentes o dos herramientas difieren. Se muestran ambas hasta resolver.',who:'Claude detecta; operador resuelve',ev:'Ambas fuentes',ia:'Perplexity o fuente primaria como desempate'},
+  {id:'e9',n:'Rechazada',x:230,y:330,w:120,h:50,q:'El dato no aparece en la fuente citada. Cuenta como alucinación en la evaluación de la herramienta.',who:'Verificador',ev:'Registro del hallazgo',ia:'Alimenta las pruebas por herramienta'}],
+  tr:[
+  {f:'st',t:'e1',l:''},
+  {f:'e1',t:'e2',l:'formato\nválido'},
+  {f:'e2',t:'e3',l:'pre-vuelo\nN1 ✓'},
+  {f:'e3',t:'e4',l:'fuente\nconfirmada'},
+  {f:'e4',t:'e5',l:'citada'},
+  {f:'e5',t:'e6',l:'fuente\n> 12 meses'},
+  {f:'e6',t:'e7',l:'retirada'},
+  {f:'e3',t:'e8',l:'las fuentes\ndifieren',c:0},
+  {f:'e8',t:'e3',l:'fuente primaria\nnueva',c:-55},
+  {f:'e3',t:'e9',l:'el dato no\naparece'},
+  {f:'e9',t:'e7',l:'descartada',c:90}]}
+};
+(function(){const X={70:50,230:230,390:410,550:590,710:770,30:22};for(const k in ST)ST[k].states.forEach(s=>{if(s.x in X)s.x=X[s.x];if(s.w===120)s.w=110})})();
+const sm={mode:'op',sel:null,els:{},ed:[]};
+function smDraw(){
+ const svg=$('#stSvg');svg.innerHTML='';defs(svg);const D=ST[sm.mode];sm.els={};sm.ed=[];const Sx={};D.states.forEach(s=>Sx[s.id]=s);
+ const gE=S('g',{},svg),gN=S('g',{},svg),gL=S('g',{},svg);
+ D.tr.forEach(t=>{const A=Sx[t.f],B=Sx[t.t];const aw=A.k==='start'?18:A.w,ah=A.k==='start'?18:A.h,bw=B.w,bh=B.h;
+  const acx=A.k==='start'?A.x:A.x+aw/2,acy=A.k==='start'?A.y:A.y+ah/2,bcx=B.x+bw/2,bcy=B.y+bh/2;
+  let e,lx,ly;
+  if(!t.c){const dx=bcx-acx,dy=bcy-acy;const p1=clipRect(acx,acy,aw+4,ah+4,dx,dy),p2=clipRect(bcx,bcy,bw+8,bh+8,-dx,-dy);
+   e=ln(gE,[p1,p2],{mk:'tri',c:'n',w:1.5});lx=(p1[0]+p2[0])/2;ly=(p1[1]+p2[1])/2}
+  else{const mx=(acx+bcx)/2,my=(acy+bcy)/2,dx=bcx-acx,dy=bcy-acy,L=Math.hypot(dx,dy)||1;const nx=-dy/L,ny=dx/L;
+   const cx=mx+nx*t.c*1.0,cy=my+ny*t.c*1.0;
+   const p1=clipRect(acx,acy,aw+4,ah+4,cx-acx,cy-acy),p2=clipRect(bcx,bcy,bw+8,bh+8,cx-bcx,cy-bcy);
+   e=S('path',{d:`M${p1[0]},${p1[1]} Q${cx},${cy} ${p2[0]},${p2[1]}`,fill:'none',stroke:C.mut,'stroke-width':1.5,'marker-end':'url(#stSvg-tri-n)'},gE);lx=(p1[0]+2*cx+p2[0])/4;ly=(p1[1]+2*cy+p2[1])/4}
+  if(t.l){const nl=t.l.split('\n').length;txt(gL,lx,ly-5-(nl-1)*11,t.l,{s:10.5,lh:11,halo:1,f:C.ink})}
+  sm.ed.push({f:t.f,t:t.t,e})});
+ D.states.forEach(s=>{const g=S('g',{class:'node'},gN);
+  if(s.k==='start'){S('circle',{cx:s.x,cy:s.y,r:9,fill:C.ink},g)}
+  else{S('rect',{x:s.x,y:s.y,width:s.w,height:s.h,rx:14,fill:s.k==='final'?'#f8e7e2':C.soft,stroke:s.k==='final'?C.rust:C.teal,'stroke-width':1.8},g);
+   if(s.k==='final')S('rect',{x:s.x+4,y:s.y+4,width:s.w-8,height:s.h-8,rx:10,fill:'none',stroke:C.rust,'stroke-width':1},g);
+   txt(g,s.x+s.w/2,s.y+s.h/2,s.n,{s:12.5,b:1,mid:1,lh:14});
+   g.onclick=()=>smSel(s.id)}
+  sm.els[s.id]=g});
+ smSel(null);
+}
+function smSel(id){
+ sm.sel=id;const D=ST[sm.mode];const rel=new Set();
+ if(id){rel.add(id);D.tr.forEach(t=>{if(t.f===id)rel.add(t.t);if(t.t===id)rel.add(t.f)})}
+ D.states.forEach(s=>sm.els[s.id].classList.toggle('dim',!!id&&!rel.has(s.id)&&s.k!=='start'));
+ sm.ed.forEach(e=>{const on=!id||e.f===id||e.t===id;e.e.classList.toggle('dim',!on);setMk(e.e,id&&on?'h':'n');e.e.setAttribute('stroke',id&&on?C.teal:C.mut)});
+ const box=$('#stInfo');
+ if(!id){info(box,sm.mode==='op'?'<h3>Ciclo de vida de una oportunidad</h3><p>Sigue las tres compuertas del Acelerador. El sistema cubre desde <b>Idea</b> hasta la ficha de Compuerta 1 y los insumos de la Compuerta 2; después recibe el estado y mide el criterio de éxito.</p><p style="color:var(--mut)">Toque un estado para ver quién actúa y qué evidencia se requiere.</p>':'<h3>Ciclo de vida de una evidencia</h3><p>Es el contrato de intercambio: ninguna cifra llega a una ficha sin pasar por <b>Normalizada</b> y <b>Verificada</b>. Solo A y B sustentan decisiones.</p><p style="color:var(--mut)">Toque un estado para ver el detalle.</p>');return}
+ const s=D.states.find(q=>q.id===id);if(s.k==='start')return;
+ const inn=D.tr.filter(t=>t.t===id).map(t=>`${esc(D.states.find(q=>q.id===t.f).n?.replace('\n',' ')||'Inicio')}${t.l?' — '+esc(t.l.replace(/\n/g,' ')):''}`);
+ const out=D.tr.filter(t=>t.f===id).map(t=>`${esc(D.states.find(q=>q.id===t.t).n.replace('\n',' '))}${t.l?' — '+esc(t.l.replace(/\n/g,' ')):''}`);
+ info(box,`<h3>${esc(s.n.replace('\n',' '))}</h3>${s.k==='final'?'<span class="tag">estado final</span>':''}<p>${esc(s.q)}</p>`+dl([['Quién actúa',esc(s.who)],['Evidencia o entregable',esc(s.ev)],['Herramientas',esc(s.ia)],['Entra desde','<ul>'+inn.map(x=>`<li>${x}</li>`).join('')+'</ul>'],['Sale hacia',out.length?'<ul>'+out.map(x=>`<li>${x}</li>`).join('')+'</ul>':'—']]));
+}
+$$('#stMode button').forEach(b=>b.onclick=()=>{sm.mode=b.dataset.m;$$('#stMode button').forEach(x=>x.classList.toggle('on',x===b));smDraw()});
+$('#stSvg').addEventListener('click',e=>{if(e.target===$('#stSvg'))smSel(null)});
+
+/* ================= CLASES ================= */
+const CL={
+ cls:[
+ {id:'marca',n:'Marca',x:20,y:10,at:['nombre','categoria','rol: ancla | en desarrollo','nSKUsActivos'],d:'Una de las marcas de DACLAF (Fotosun UV 100, Dr. Akerman\'s, Advantax, Rinomär, Aid First, Daclafin, Aradicaps, Prominent). Fotosun concentra cerca de la mitad de las ventas B2C.'},
+ {id:'esc',n:'EscenarioPresupuesto',x:400,y:10,at:['nombre','supuestos','inversionDesarrollo','inversionRegistros','inventarioInicial'],d:'Escenario del Presupuesto 2027. Agrega oportunidades y se parametriza aparte de la narrativa para correr sensibilidades.'},
+ {id:'fue',n:'Fuente',x:780,y:10,at:['url','fechaFuente','tipo: primaria | secundaria','nivelDatos: N1'],d:'De dónde sale un dato. Una fuente con más de 12 meses de antigüedad hace caducar la evidencia.'},
+ {id:'car',n:'Carril',st:'«enumeración»',x:20,y:200,at:['A_Extension','B_Cosmetico_Suplemento','C_OTC_Registro','tiempoObjetivo [POR DEFINIR]'],d:'Los tres carriles del Acelerador. Los tiempos reales por carril están pendientes de confirmar con Asuntos Regulatorios.'},
+ {id:'opo',n:'Oportunidad',x:400,y:200,at:['id: OP-###','nombre','marca','carril','estado','scoreTotal','hipotesis'],op:['calificar()','generarFicha()'],d:'El producto o línea candidato. Es el centro del modelo: se sustenta en evidencia, se califica, se decide en compuertas y puede originar SKUs.'},
+ {id:'evi',n:'Evidencia',x:780,y:200,at:['id: EV-###','afirmacion','valor / unidad / periodo','tipoDato: HECHO | ESTIMACION | INFERENCIA','confianza: A | B | C','estado'],op:['verificar()'],d:'La unidad mínima de conocimiento del sistema. Sin evidencia registrada no entra una cifra a una ficha ni al presupuesto.'},
+ {id:'dec',n:'Decision',x:20,y:430,at:['compuerta: 1 | 2 | 3','resultado: aprobar | ajustar | detener','decididaPor','fecha','versionRanking'],d:'Registro de cada decisión en compuerta: quién, cuándo y sobre qué versión del ranking.'},
+ {id:'pun',n:'Puntaje',x:400,y:430,at:['criterio','peso (lo fija la DG)','valor 0 a 5','evidenciaIds'],d:'Calificación por criterio. Los pesos los definen David y Sara; los valores deben apuntar a evidencia.'},
+ {id:'eje',n:'EjecucionBrief',x:780,y:430,at:['id','herramienta','versionModelo','inicio / fin','costo','calidad 0 a 5'],d:'Una corrida concreta de un brief en una herramienta. Guarda tiempo, costo y calidad; alimenta las pruebas por herramienta. En v0.1 no se registra de forma estructurada.'},
+ {id:'sku',n:'SKU',x:20,y:620,at:['codigoNetSuite','presentacion','esKit','estadoCicloVida','criterioExito6m / 12m'],d:'El producto ya existente en NetSuite que nace de una oportunidad aprobada. Qué cuenta como SKU para la meta está pendiente de definir con la DG.'},
+ {id:'her',n:'Herramienta',x:400,y:620,at:['nombre','rol','modo: Build | Run','nivelMaximoPermitido: N1 | N2 | N3'],d:'Perplexity, Genspark, Manus, ChatGPT, NotebookLM, Claude. El nivel máximo permitido hace cumplir el gobierno de datos.'},
+ {id:'bri',n:'Brief',x:780,y:620,at:['id','objetivo','preguntas','alcance','nivelDatos','formatoSalida'],d:'El encargo estándar. Es el contrato que hace intercambiables a las herramientas.'}],
+ rel:[
+ {a:'marca',b:'opo',ma:'1',mb:'*',l:'tiene'},
+ {a:'car',b:'opo',ma:'1',mb:'*',l:'clasifica'},
+ {a:'esc',b:'opo',k:'agg',ma:'*',mb:'*',l:'incluye'},
+ {a:'opo',b:'evi',ma:'1',mb:'*',l:'se sustenta en'},
+ {a:'evi',b:'fue',ma:'*',mb:'1',l:'cita'},
+ {a:'opo',b:'pun',k:'comp',ma:'1',mb:'*',l:'recibe'},
+ {a:'opo',b:'dec',k:'comp',ma:'1',mb:'*',l:'se decide en'},
+ {a:'opo',b:'sku',ma:'1',mb:'0..*',l:'origina'},
+ {a:'eje',b:'evi',ma:'1',mb:'*',l:'produce'},
+ {a:'bri',b:'eje',ma:'1',mb:'*',l:'se ejecuta como'},
+ {a:'her',b:'eje',ma:'1',mb:'*',l:'corre'}]
+};
+const cl={sel:null,box:{},el:{},rl:[]};
+function clDraw(){
+ const svg=$('#clSvg');svg.innerHTML='';defs(svg);const gR=S('g',{},svg),gC=S('g',{},svg);
+ CL.cls.forEach(c=>{const w=200,lh=15,ah=c.at.length*lh+8,oh=c.op?c.op.length*lh+8:0,hh=c.st?36:26,h=hh+ah+oh;c.w=w;c.h=h;cl.box[c.id]=c});
+ CL.rel.forEach(r=>{const A=cl.box[r.a],B=cl.box[r.b];const ax=A.x+A.w/2,ay=A.y+A.h/2,bx=B.x+B.w/2,by=B.y+B.h/2;
+  const p1=clipRect(ax,ay,A.w,A.h,bx-ax,by-ay),p2=clipRect(bx,by,B.w,B.h,ax-bx,ay-by);
+  const e=ln(gR,[p1,p2],{col:C.mut,w:1.4});
+  if(r.k==='agg')e.setAttribute('marker-start','url(#clSvg-dia-n)');if(r.k==='comp')e.setAttribute('marker-start','url(#clSvg-diaf-n)');
+  const mx=(p1[0]+p2[0])/2,my=(p1[1]+p2[1])/2;const t=txt(gR,mx,my-3,r.l,{s:10.5,halo:1,f:C.mut,i:1});
+  const u=(p2[0]-p1[0])/Math.hypot(p2[0]-p1[0],p2[1]-p1[1]||1),v=(p2[1]-p1[1])/(Math.hypot(p2[0]-p1[0],p2[1]-p1[1])||1);
+  const m1=txt(gR,p1[0]+u*22-v*10,p1[1]+v*22+u*10+4,r.ma,{s:11,b:1,halo:1}),m2=txt(gR,p2[0]-u*18-v*10,p2[1]-v*18+u*10+4,r.mb,{s:11,b:1,halo:1});
+  cl.rl.push({a:r.a,b:r.b,e,t,m1,m2})});
+ CL.cls.forEach(c=>{const g=S('g',{class:'node'},gC);const hh=c.st?36:26;
+  S('rect',{x:c.x,y:c.y,width:c.w,height:c.h,rx:6,fill:'#fff',stroke:C.teal,'stroke-width':1.6},g);
+  S('rect',{x:c.x,y:c.y,width:c.w,height:hh,rx:6,fill:C.teal},g);S('rect',{x:c.x,y:c.y+hh-6,width:c.w,height:6,fill:C.teal},g);
+  if(c.st){txt(g,c.x+c.w/2,c.y+13,c.st,{s:10.5,f:'#cfe0dc'});txt(g,c.x+c.w/2,c.y+29,c.n,{s:13,b:1,f:'#fff'})}else txt(g,c.x+c.w/2,c.y+18,c.n,{s:13,b:1,f:'#fff'});
+  c.at.forEach((a,i)=>txt(g,c.x+8,c.y+hh+15+i*15,a,{s:11,a:'start',f:C.ink}));
+  if(c.op){const oy=c.y+hh+c.at.length*15+8;S('line',{x1:c.x,x2:c.x+c.w,y1:oy-4,y2:oy-4,stroke:C.teal},g);c.op.forEach((a,i)=>txt(g,c.x+8,oy+11+i*15,a,{s:11,a:'start',f:C.teal}))}
+  g.onclick=()=>clSel(c.id);cl.el[c.id]=g});
+ clSel(null);
+}
+function clSel(id){
+ cl.sel=id;const rel=new Set();if(id){rel.add(id);CL.rel.forEach(r=>{if(r.a===id)rel.add(r.b);if(r.b===id)rel.add(r.a)})}
+ CL.cls.forEach(c=>cl.el[c.id].classList.toggle('dim',!!id&&!rel.has(c.id)));
+ cl.rl.forEach(r=>{const on=!id||r.a===id||r.b===id;[r.e,r.t,r.m1,r.m2].forEach(x=>x.classList.toggle('dim',!on));r.e.setAttribute('stroke',id&&on?C.teal:C.mut);r.e.setAttribute('stroke-width',id&&on?2:1.4)});
+ const box=$('#clInfo');
+ if(!id){info(box,'<h3>Modelo de datos</h3><p>Doce clases. Tres ideas organizan todo: la <b>Oportunidad</b> es el centro; la <b>Evidencia</b> es lo que la sustenta y siempre tiene <b>Fuente</b>; el <b>Brief</b> y su <b>Ejecución</b> son el contrato que hace intercambiables a las <b>Herramientas</b>.</p><p style="color:var(--mut)">Rombo lleno = composición (si se elimina la oportunidad, se eliminan sus puntajes y decisiones). Rombo vacío = agregación.</p>');return}
+ const c=cl.box[id];const nm=x=>cl.box[x].n;
+ const rs=CL.rel.filter(r=>r.a===id||r.b===id).map(r=>{const o=r.a===id?r.b:r.a;return `${esc(r.a===id?c.n:nm(r.a))} <b>${esc(r.ma)}</b> — ${esc(r.l)} — <b>${esc(r.mb)}</b> ${esc(r.a===id?nm(r.b):c.n)}${r.k==='comp'?' (composición)':r.k==='agg'?' (agregación)':''}`});
+ info(box,`<h3>${esc(c.n)}</h3>${c.st?`<span class="tag">${esc(c.st)}</span>`:''}<p>${esc(c.d)}</p>`+dl([['Relaciones','<ul>'+rs.map(x=>`<li>${x}</li>`).join('')+'</ul>']]));
+}
+$('#clSvg').addEventListener('click',e=>{if(e.target===$('#clSvg'))clSel(null)});
+
+/* ================= ARQUITECTURA ================= */
+const AR={
+ lanes:[['INTERACCIÓN',30,85],['ORQUESTACIÓN',130,110],['EJECUCIÓN\n(IA externas)',250,100],['DATOS Y\nMEMORIA',370,100],['GOBIERNO',490,100]],
+ comps:[
+ {id:'u3',n:'Comentarios y solicitudes\nde cambio',x:130,y:42,w:250,h:52,md:'1',nw:1,imp:'M7',d:'Canal para que revisores comenten elementos con ID y versión. Cada comentario se convierte en una solicitud de cambio (CR-###) que el Router clasifica.',io:'Entra: comentarios con ID. Sale: solicitudes de cambio al Router.',niv:'N1 en vista pública; N2 y N3 solo en la vista de editor.'},
+ {id:'u1',n:'Project compartido · Claude',x:395,y:42,w:250,h:52,md:'a',d:'Espacio donde David, Sara y el operador consultan resultados. Es la interfaz principal del sistema.',io:'Entra: solicitudes y decisiones. Sale: fichas, rankings y respuestas.',niv:'N1, N2 y N3.'},
+ {id:'u2',n:'Vistas por rol y entregables\n(XLSX · DOCX · PPTX · HTML)',x:660,y:42,w:300,h:52,md:'a',d:'Entregables derivados de la fuente de datos: ficha de Compuerta 1, modelo, tablero y presupuesto. Son derivados; la fuente es el registro.',io:'Entra: puntajes y escenarios. Sale: documentos.',niv:'Según el rol del lector.'},
+ {id:'o0',n:'Claude · orquestador único\n(arma el brief, analiza, verifica, califica y redacta)',x:130,y:145,w:830,h:80,md:'0',d:'En v0.1 un solo componente hace todo: enrutar, armar briefs, normalizar, verificar a mano con el operador, calificar y redactar. Es simple, pero mezcla roles y no deja rastro de quién validó qué.',io:'Entra: solicitudes. Sale: briefs, tablas y fichas.',niv:'N1, N2 y N3.'},
+ {id:'r1',n:'Router',x:130,y:145,w:138,h:80,md:'1',nw:1,imp:'M4',d:'Recibe cualquier solicitud (brief, decisión o comentario), consulta el pre-vuelo y decide qué herramienta o paso corresponde, según reglas escritas.',io:'Entra: solicitudes. Sale: tareas enrutadas.',niv:'N1, N2 y N3.'},
+ {id:'b1',n:'Brief\nBuilder',x:286,y:145,w:138,h:80,md:'1',nw:1,imp:'M4',d:'Genera el brief estándar desde una plantilla, con el nivel de datos declarado. Es una plantilla reutilizable, no un encargo artesanal.',io:'Entra: tarea. Sale: brief estándar.',niv:'N1 hacia afuera.'},
+ {id:'sc',n:'Scorer y\nmodelo',x:776,y:145,w:184,h:80,md:'1',nw:1,imp:'M10',d:'Califica con los criterios y pesos fijados por la DG, corre sensibilidades y alimenta el Presupuesto 2027 con parámetros separados de la narrativa.',io:'Entra: evidencia A y B. Sale: ranking y escenarios.',niv:'N1, N2 y N3.'},
+ {id:'n1',n:'Normalizador',x:442,y:145,w:138,h:80,md:'1',d:'Convierte las salidas de cualquier herramienta al formato del registro y detecta duplicados y contradicciones.',io:'Entra: tablas de las IA. Sale: filas EV-###.',niv:'N1.'},
+ {id:'vf',n:'Verificador\nindependiente',x:598,y:145,w:160,h:80,md:'1',nw:1,imp:'M2',d:'Abre cada fuente y confirma que el dato aparezca. Debe ser un paso distinto de quien generó la salida, para que no se confirme a sí mismo. Al inicio puede ser muestreo manual.',io:'Entra: filas EV-###. Sale: informe de verificación y confianza.',niv:'N1.'},
+ {id:'pe',n:'Perplexity',sub:'investigación con citas',x:130,y:268,w:148,h:66,md:'a',d:'Investigación con fuentes citadas. Rol primario a confirmar con el piloto.',io:'Entra: brief. Sale: tabla con citas.',niv:'Solo N1.'},
+ {id:'gs',n:'Genspark',sub:'barrido y hojas de cálculo',x:288,y:268,w:148,h:66,md:'a',d:'Barrido amplio y entregables tabulares. Rol primario a confirmar con el piloto.',io:'Entra: brief. Sale: hoja de cálculo.',niv:'Solo N1.'},
+ {id:'ma',n:'Manus',sub:'tareas largas autónomas',x:446,y:268,w:148,h:66,md:'a',d:'Levantamiento de catálogos de competidores y monitoreo. Capacidad por verificar con piloto.',io:'Entra: brief. Sale: tabla.',niv:'Solo N1.'},
+ {id:'gp',n:'ChatGPT',sub:'segunda opinión',x:604,y:268,w:148,h:66,md:'a',d:'Ataca los supuestos del ranking antes de llegar a los decisores. Recibe supuestos, no datos internos.',io:'Entra: supuesto a refutar. Sale: contra-argumentos.',niv:'N1 o anonimizado.'},
+ {id:'nl',n:'NotebookLM · Gemini',sub:'corpus cerrado con citas',x:762,y:268,w:198,h:66,md:'a',d:'Responde sobre un corpus cerrado de documentos, citando el pasaje. Reduce el riesgo de inventar, pero se verifica igual.',io:'Entra: documentos cargados. Sale: respuestas con cita.',niv:'N1 y N2.'},
+ {id:'l0',n:'Ledger en CSV',x:130,y:388,w:250,h:66,md:'0',d:'Archivo plano con el registro de evidencia. Sin listas desplegables, IDs automáticos ni vistas por rol: invita a errores de captura.',io:'Entra: filas escritas por Claude. Sale: consultas.',niv:'N1 a N3.'},
+ {id:'l1',n:'Ledger estructurado\n(hoja compartida con validación)',x:130,y:388,w:250,h:66,md:'1',nw:1,imp:'M1',d:'El mismo registro, pero con IDs automáticos, listas desplegables (tipo de dato, confianza, estado), vistas por rol e historial de cambios. Puede empezar en una hoja compartida y migrar a base de datos si crece.',io:'Entra: filas verificadas. Sale: evidencia A y B.',niv:'N1 a N3 según columna.'},
+ {id:'sn',n:'Snapshots internos\n(NetSuite, ventas)',x:395,y:388,w:200,h:66,md:'a',d:'Copias de datos internos que no cambian durante un análisis: maestro de artículos y ventas por SKU. Es la línea base.',io:'Entra: exports. Sale: tablas base.',niv:'N2 y N3.'},
+ {id:'co',n:'Corpus regulatorio\ny documentos',x:610,y:388,w:170,h:66,md:'a',d:'Normas, reportes de Hypera y Cimed y documentos de DACLAF cargados en NotebookLM.',io:'Entra: documentos. Sale: respuestas con cita.',niv:'N1 y N2.'},
+ {id:'dl',n:'Registro de decisiones\ny versiones',x:795,y:388,w:165,h:66,md:'1',nw:1,imp:'M6',d:'Bitácora inmutable de cada decisión de compuerta y de cada versión congelada del ranking. Es la base para que los comentarios apunten a algo estable.',io:'Entra: decisiones. Sale: historial.',niv:'N1 a N3.'},
+ {id:'g1',n:'Pre-vuelo de datos\nN1 · N2 · N3',x:130,y:508,w:300,h:66,md:'a',chg:1,imp:'M5',d:'v0.1: lista de verificación que cumple el operador. v1.0: puerta obligatoria con registro; ningún brief sale a una herramienta externa sin la casilla N1 firmada.',io:'Entra: brief. Sale: autorización o bloqueo.',niv:'—'},
+ {id:'g2',n:'Pruebas por herramienta y\nbitácora de costo y calidad',x:445,y:508,w:250,h:66,md:'1',nw:1,imp:'M3',d:'Conjunto de preguntas con respuesta conocida más el registro de cada corrida (tiempo, costo, exactitud). Define qué herramienta es primaria para cada rol y se repite cuando una herramienta cambia.',io:'Entra: corridas. Sale: ranking de herramientas.',niv:'N1.'},
+ {id:'g3',n:'Roles y accesos\nlector · comentarista · editor',x:710,y:508,w:250,h:66,md:'1',nw:1,imp:'M7',d:'Define quién puede ver, comentar o editar y qué nivel de datos ve cada rol. Requisito para abrir el sistema a comentarios.',io:'Entra: solicitudes de acceso. Sale: permisos.',niv:'Según el rol.'}],
+ imp:{
+ M1:{t:'Registro de evidencia estructurado',p:'Un CSV plano permite errores de captura, IDs repetidos y no tiene vistas por rol.',c:'IDs automáticos, listas desplegables y vistas por rol en una hoja compartida; migrar a base de datos si crece.',esf:2,imp:5,w:'ahora',comps:['l1']},
+ M2:{t:'Verificador independiente de citas',p:'Si quien genera también valida, una IA puede confirmar su propia alucinación.',c:'Paso separado que abre cada URL y compara el dato. Al inicio, muestreo manual de 10 filas por herramienta; después, automatizado.',esf:3,imp:5,w:'ahora',comps:['vf']},
+ M3:{t:'Pruebas y bitácora por herramienta',p:'Las capacidades cambian rápido y hoy los roles se asignan por intuición.',c:'Piloto con preguntas de respuesta conocida y registro de tiempo, costo y calidad; se repite ante cambios de modelo o plan.',esf:2,imp:4,w:'ahora',comps:['g2']},
+ M4:{t:'Router y Brief Builder como plantillas',p:'Cada operador armaría el brief a su manera y el resultado dependería de quién lo escribe.',c:'Reglas de enrutamiento y plantilla de brief escritas como instrucciones del Project, reutilizables por cualquier operador.',esf:1,imp:3,w:'ahora',comps:['r1','b1']},
+ M5:{t:'Pre-vuelo de datos como puerta',p:'Una lista que se puede olvidar no protege datos internos, y DACLAF no tiene política de TI.',c:'Paso obligatorio con registro: nivel N1, N2 o N3 declarado antes de que un brief salga a una herramienta externa.',esf:1,imp:5,w:'ahora',comps:['g1']},
+ M6:{t:'Registro de decisiones y versiones congeladas',p:'Sin versiones inmutables, un comentario o una decisión se refiere a algo que ya cambió.',c:'Bitácora de decisiones y snapshots de cada ranking y ficha.',esf:2,imp:3,w:'ahora',comps:['dl']},
+ M7:{t:'Canal de comentarios con triage y roles',p:'Abrir a comentarios sin IDs, roles ni triage genera ruido y contradicciones.',c:'Mínimo hoy: comentarios en el documento compartido citando el ID. Después: roles, solicitudes de cambio y triage asistido.',esf:3,imp:3.6,w:'mvp',comps:['u3','g3']},
+ M8:{t:'Bitácora de costo y calidad',p:'No se sabe cuánto cuesta ni qué rinde cada suscripción.',c:'Una fila por corrida con tiempo, costo y calidad. Se construye junto con M3, con poco trabajo extra.',esf:1,imp:2,w:'despues',comps:['g2']},
+ M9:{t:'Automatización con Make',p:'La ingesta manual no escala a monitoreo recurrente.',c:'Flujos que mueven salidas al registro y lanzan alertas, siempre con aprobación humana. Solo cuando el proceso manual esté estable.',esf:5,imp:3,w:'despues',comps:['n1']},
+ M10:{t:'Modelo de presupuesto parametrizado',p:'Un presupuesto escrito como narrativa no admite escenarios ni sensibilidades.',c:'Modelo en Excel con supuestos separados, escenarios y análisis de sensibilidad, alimentado por el Scorer.',esf:3.6,imp:4.5,w:'ahora',comps:['sc']}}
+};
+const ar={mode:1,sel:null,el:{},ed:[],selM:null};
+const WL={ahora:['Antes del 18-dic','p-ahora',C.teal2],mvp:['Mínimo ahora, completo después','p-mvp',C.amber],despues:['Después','p-desp','#9aa5a2']};
+function arDraw(){
+ const svg=$('#arSvg');svg.innerHTML='';defs(svg);ar.el={};ar.ed=[];const m=ar.mode;
+ const vis=c=>c.md==='a'||c.md===String(m);
+ AR.lanes.forEach(l=>{S('rect',{x:8,y:l[1]-8,width:984,height:l[2]+10,rx:8,fill:l[0]==='GOBIERNO'?'#eef2ee':'#f9faf8',stroke:C.line},svg);txt(svg,16,l[1]+10,l[0],{s:10,b:1,a:'start',f:C.mut,lh:11})});
+ const g=S('g',{},svg);const byId={};AR.comps.forEach(c=>byId[c.id]=c);
+ const E=(pts,o)=>{const e=ln(g,pts,Object.assign({c:'n'},o));ar.ed.push({e,ids:o.ids||[]});return e};
+ // buses
+ E([[130,262],[960,262]],{w:2,ids:['b1','n1','o0','pe','gs','ma','gp','nl'],col:C.line});
+ txt(g,545,258,'contrato de intercambio · brief ↓ · tabla normalizada ↑',{s:10.5,f:C.mut,halo:1});
+ AR.comps.filter(c=>vis(c)&&['pe','gs','ma','gp','nl'].includes(c.id)).forEach(c=>E([[c.x+c.w/2,c.y],[c.x+c.w/2,262]],{mk:'arr',c:'n',ids:[c.id]}));
+ if(m===0){E([[545,225],[545,262]],{mk:'tri',c:'n',ids:['o0']});E([[560,262],[560,225]],{mk:'tri',c:'n',ids:['o0']});
+   E([[520,94],[520,145]],{mk:'tri',c:'n',ids:['u1','o0']});E([[870,145],[870,94]],{mk:'tri',c:'n',ids:['o0','u2']});E([[960,185],[975,185],[975,490]],{ids:['o0']})}
+ else{E([[355,225],[355,262]],{mk:'tri',c:'n',ids:['b1']});E([[511,262],[511,225]],{mk:'tri',c:'n',ids:['n1']});
+   E([[205,94],[205,145]],{mk:'tri',c:'a',ids:['u3','r1']});E([[470,94],[255,145]],{mk:'tri',c:'n',ids:['u1','r1']});
+   E([[268,185],[286,185]],{mk:'tri',c:'n',ids:['r1','b1']});E([[580,185],[598,185]],{mk:'tri',c:'n',ids:['n1','vf']});E([[758,185],[776,185]],{mk:'tri',c:'n',ids:['vf','sc']});
+   E([[868,145],[868,94]],{mk:'tri',c:'n',ids:['sc','u2']});E([[960,185],[975,185],[975,490]],{ids:['sc']})}
+ E([[130,490],[975,490]],{w:2,col:C.line,ids:['l0','l1','sn','co','dl','g1','g2','g3']});
+ txt(g,545,486,'bus de datos y control · lee y escribe evidencia, snapshots y decisiones · el pre-vuelo autoriza cada salida',{s:10.5,f:C.mut,halo:1});
+ AR.comps.filter(vis).forEach(c=>{if(c.y>=388&&c.y<490)E([[c.x+c.w/2,c.y+c.h],[c.x+c.w/2,490]],{ids:[c.id]});if(c.y>=508)E([[c.x+c.w/2,c.y],[c.x+c.w/2,490]],{ids:[c.id]})});
+ AR.comps.filter(vis).forEach(c=>{const gg=S('g',{class:'node'},g);const isNew=m===1&&c.nw,isChg=m===1&&c.chg;
+  S('rect',{x:c.x,y:c.y,width:c.w,height:c.h,rx:8,fill:isNew?'#fff6e3':'#fff',stroke:isNew?C.amberD:isChg?C.teal2:C.teal,'stroke-width':isNew||isChg?2.2:1.5},gg);
+  txt(gg,c.x+c.w/2,c.y+c.h/2-(c.sub?6:0),c.n,{s:c.n.length>40?11:12,b:1,mid:1,lh:13});if(c.sub)txt(gg,c.x+c.w/2,c.y+c.h-12,c.sub,{s:10.5,f:C.mut});
+  if(isNew){S('rect',{x:c.x+c.w-44,y:c.y-7,width:40,height:14,rx:7,fill:C.amber},gg);txt(gg,c.x+c.w-24,c.y+3.5,'NUEVO',{s:9,b:1,f:C.ink})}
+  if(isChg){S('rect',{x:c.x+c.w-58,y:c.y-7,width:54,height:14,rx:7,fill:C.teal2},gg);txt(gg,c.x+c.w-31,c.y+3.5,'AJUSTADO',{s:9,b:1,f:'#fff'})}
+  gg.onclick=()=>arSel(c.id);ar.el[c.id]=gg});
+ arSel(ar.sel&&ar.el[ar.sel]?ar.sel:null,true);
+}
+function arSel(id,keep){
+ ar.sel=id;const hl=new Set(ar.selM?AR.imp[ar.selM].comps:id?[id]:[]);
+ for(const k in ar.el)ar.el[k].classList.toggle('dim',hl.size>0&&!hl.has(k));
+ ar.ed.forEach(x=>{const on=hl.size===0||x.ids.some(i=>hl.has(i));x.e.classList.toggle('dim',!on)});
+ const box=$('#arInfo');
+ if(!id&&!ar.selM){info(box,`<h3>${ar.mode?'Arquitectura recomendada v1.0':'Diseño actual v0.1'}</h3><p>${ar.mode?'Cinco capas con tres cambios de fondo: el orquestador se divide en roles (Router, Brief Builder, Normalizador, Verificador, Scorer); el registro pasa a ser estructurado; y aparecen las piezas de gobierno (pruebas, decisiones y roles) y de comentarios.':'Un orquestador único hace todo y el registro es un CSV. Funciona para arrancar, pero mezcla roles, depende de la disciplina del operador y no está listo para recibir comentarios.'}</p><p style="color:var(--mut)">Los componentes con etiqueta <b>NUEVO</b> no existen en v0.1. Toque uno para ver qué hace, o elija una mejora abajo.</p>`);return}
+ if(ar.selM&&!id){const M=AR.imp[ar.selM];info(box,`<h3>${ar.selM} · ${esc(M.t)}</h3><span class="pill ${WL[M.w][1]}">${WL[M.w][0]}</span><dl><dt>Problema</dt><dd>${esc(M.p)}</dd><dt>Cambio</dt><dd>${esc(M.c)}</dd></dl>`);return}
+ const c=AR.comps.find(q=>q.id===id);
+ info(box,`<h3>${esc(c.n.replace(/\n/g,' '))}</h3>${c.nw&&ar.mode?'<span class="tag new">nuevo en v1.0</span>':''}${c.chg&&ar.mode?'<span class="tag">ajustado</span>':''}<p>${esc(c.d)}</p>`+dl([['Entradas y salidas',esc(c.io)],['Nivel de datos',esc(c.niv)],['Mejora relacionada',c.imp?`${esc(c.imp)} · ${esc(AR.imp[c.imp].t)}`:'']]));
+}
+$$('#arMode button').forEach(b=>b.onclick=()=>{ar.mode=+b.dataset.m;$$('#arMode button').forEach(x=>x.classList.toggle('on',x===b));ar.selM=null;ar.sel=null;arDraw();mlSel(null,true)});
+$('#arSvg').addEventListener('click',e=>{if(e.target===$('#arSvg')){ar.sel=null;ar.selM=null;arSel(null);mlMark()}});
+
+/* matriz y lista de mejoras */
+function mxDraw(){
+ const svg=$('#mxSvg');svg.innerHTML='';const X0=50,X1=500,Y0=360,Y1=40;
+ S('rect',{x:X0,y:Y1,width:X1-X0,height:Y0-Y1,fill:'#fff',stroke:C.line},svg);
+ S('rect',{x:X0,y:Y1,width:(X1-X0)/2,height:(Y0-Y1)/2,fill:'#eaf6f3'},svg);
+ txt(svg,X0,Y1-8,'Zona verde: alto impacto con poco esfuerzo',{s:11,b:1,a:'start',f:C.teal});
+ txt(svg,X1-8,Y0-8,'Bajo impacto · mucho esfuerzo',{s:11,a:'end',f:C.mut});
+ txt(svg,(X0+X1)/2,392,'Esfuerzo →',{s:12,b:1,f:C.mut});
+ const t=txt(svg,14,190,'Impacto →',{s:12,b:1,f:C.mut});t.setAttribute('transform','rotate(-90 14 190)');
+ for(const k in AR.imp){const M=AR.imp[k],cx=X0+(M.esf-0.5)/5*(X1-X0)+0,cy=Y0-(M.imp-0.5)/5*(Y0-Y1);
+  const g=S('g',{class:'node','data-m':k},svg);S('circle',{cx,cy,r:17,fill:WL[M.w][2],stroke:'#fff','stroke-width':2},g);txt(g,cx,cy+4,k,{s:11.5,b:1,f:M.w==='despues'?'#fff':C.ink});g.onclick=()=>mlSel(k)}
+}
+function mlDraw(){$('#mlist').innerHTML=Object.keys(AR.imp).map(k=>{const M=AR.imp[k];return `<button class="mi" data-m="${k}"><b class="id">${k}</b><span class="t">${esc(M.t)}<small>${esc(M.p)}</small></span><span class="pill ${WL[M.w][1]}">${WL[M.w][0]}</span></button>`}).join('');$$('.mi').forEach(b=>b.onclick=()=>mlSel(b.dataset.m))}
+function mlMark(){$$('.mi').forEach(b=>b.classList.toggle('on',b.dataset.m===ar.selM));
+ const box=$('#mxInfo');
+ if(!ar.selM)box.innerHTML='<h3 style="font-size:19px">Mi recomendación</h3><p style="margin:6px 0">Antes del 18-dic, el núcleo: <b>M5</b> pre-vuelo, <b>M1</b> registro estructurado, <b>M3</b> pruebas por herramienta (el piloto post-solar es la primera), <b>M2</b> verificación (muestreo manual primero), <b>M6</b> decisiones y versiones, y <b>M10</b> porque es el entregable del Presupuesto 2027.</p><p style="margin:0">De <b>M7</b> solo la versión mínima: comentarios con ID. <b>M8</b> y <b>M9</b> esperan a que el proceso manual esté estable.</p>';
+ else{const M=AR.imp[ar.selM];box.innerHTML=`<h3 style="font-size:19px">${ar.selM} · ${esc(M.t)}</h3><span class="pill ${WL[M.w][1]}">${WL[M.w][0]}</span><p style="margin:8px 0 4px"><b>Problema:</b> ${esc(M.p)}</p><p style="margin:0"><b>Cambio:</b> ${esc(M.c)}</p><p style="margin:8px 0 0;color:var(--mut)">Impacto ${M.imp} de 5 · esfuerzo ${M.esf} de 5 (juicio mío, a calibrar).</p>`}}
+function mlSel(k,silent){ar.selM=silent?null:(ar.selM===k?null:k);if(ar.selM&&ar.mode===0){ar.mode=1;$$('#arMode button').forEach(x=>x.classList.toggle('on',x.dataset.m==='1'));arDraw()}
+ ar.sel=null;arSel(null);mlMark();$$('#mxSvg g').forEach(g=>g.setAttribute('opacity',!ar.selM||g.dataset.m===ar.selM?1:.35)) }
+
+/* ---------- init ---------- */
+ucInit();sqDraw();sqUpd();smDraw();clDraw();arDraw();mxDraw();mlDraw();mlMark();
+showTab((location.hash||'#uc').slice(1)&&TABS.some(t=>t[0]===location.hash.slice(1))?location.hash.slice(1):'uc');
+</script>
+</body>
+</html>

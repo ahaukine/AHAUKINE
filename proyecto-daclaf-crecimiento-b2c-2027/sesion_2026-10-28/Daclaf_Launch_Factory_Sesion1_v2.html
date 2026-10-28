@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DACLAF Launch Factory · Sistema de IA + Cuestionario en vivo · Practical AI®</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --papel:#F7F2E9; --papel-2:#F0E9DC; --tinta:#23180F; --tinta-2:#5C4F42;
+  --terra:#C4502C; --terra-osc:#9E3B1E; --oliva:#6E6F3C; --ocre:#D9A441;
+  --linea:#D8CDBA; --blanco:#FFFDF8;
+  --serif:"Fraunces", Georgia, serif;
+  --mono:"JetBrains Mono", "Courier New", monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{background:var(--papel);color:var(--tinta);font-family:var(--serif);font-weight:400;font-size:16px;line-height:1.55}
+::selection{background:var(--terra);color:var(--blanco)}
+
+/* ---------- barra superior ---------- */
+.topbar{position:sticky;top:0;z-index:50;display:flex;align-items:center;gap:1.25rem;
+  padding:.7rem 2rem;background:rgba(35,24,15,.94);color:var(--papel);backdrop-filter:blur(6px)}
+.topbar .brand{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ocre);white-space:nowrap}
+.topbar nav{display:flex;gap:1.1rem;flex-wrap:wrap}
+.topbar nav a{color:var(--papel);opacity:.75;text-decoration:none;font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;text-transform:uppercase}
+.topbar nav a:hover,.topbar nav a:focus-visible{opacity:1;color:var(--ocre)}
+.reloj{margin-left:auto;font-family:var(--mono);font-size:.72rem;letter-spacing:.06em;border:1px solid rgba(247,242,233,.35);
+  border-radius:999px;padding:.3rem .8rem;color:var(--ocre);white-space:nowrap}
+
+/* ---------- hero ---------- */
+.hero{position:relative;padding:4.5rem 2rem 3.2rem;max-width:1200px;margin:0 auto}
+.hero .eyebrow{font-family:var(--mono);font-size:.75rem;letter-spacing:.22em;text-transform:uppercase;color:var(--terra);margin-bottom:1.2rem}
+.hero h1{font-weight:600;font-size:clamp(2.4rem,5.2vw,4.2rem);line-height:1.04;letter-spacing:-.01em;max-width:16ch}
+.hero h1 em{font-style:italic;font-weight:400;color:var(--terra)}
+.hero .sub{margin-top:1.4rem;max-width:62ch;font-size:1.08rem;color:var(--tinta-2)}
+.hero .meta{margin-top:2.2rem;display:flex;gap:2.4rem;flex-wrap:wrap;align-items:flex-end}
+.kv .n{font-family:var(--mono);font-weight:700;font-size:1.7rem;letter-spacing:-.02em}
+.kv .l{font-family:var(--mono);font-size:.66rem;letter-spacing:.14em;text-transform:uppercase;color:var(--tinta-2)}
+.hero .filetag{margin-top:2.4rem;font-family:var(--mono);font-size:.68rem;color:var(--tinta-2);letter-spacing:.04em}
+.rule-h{border:none;border-top:1px solid var(--linea);max-width:1200px;margin:0 auto}
+
+/* ---------- secciones ---------- */
+section{max-width:1200px;margin:0 auto;padding:3.4rem 2rem}
+.sec-head{display:flex;align-items:baseline;gap:1.2rem;margin-bottom:2.2rem;flex-wrap:wrap}
+.sec-num{font-family:var(--mono);font-size:.75rem;color:var(--terra);letter-spacing:.2em}
+.sec-head h2{font-weight:600;font-size:clamp(1.6rem,3vw,2.3rem);letter-spacing:-.01em}
+.sec-head .hint{font-family:var(--mono);font-size:.7rem;color:var(--tinta-2);letter-spacing:.05em;margin-left:auto;text-transform:uppercase}
+
+/* ---------- sistema: conmutador ---------- */
+.sistema{display:grid;grid-template-columns:1.35fr 1fr;gap:2.5rem;align-items:start}
+.board{position:relative;background:var(--papel-2);border:1px solid var(--linea);border-radius:14px;padding:.8rem}
+.board svg{width:100%;height:auto;display:block}
+.node{cursor:pointer}
+.node circle.core{fill:var(--blanco);stroke:var(--tinta);stroke-width:1.4;transition:.18s}
+.node text{font-family:var(--mono);fill:var(--tinta)}
+.node .rol{font-size:8.4px;fill:var(--tinta-2)}
+.node circle.halo{fill:none;stroke:var(--terra);stroke-width:0;opacity:.5;transition:.18s}
+.node:hover circle.core{stroke:var(--terra)}
+.node.active circle.core{fill:var(--terra);stroke:var(--terra-osc)}
+.node.active text{fill:var(--blanco)}
+.node.active .rol{fill:var(--papel)}
+.node.active circle.halo{stroke-width:10;opacity:.18}
+.edge{stroke:var(--tinta);stroke-width:1.2;opacity:.3;stroke-dasharray:3 4;fill:none}
+.edge.active{stroke:var(--terra);opacity:.9;stroke-dasharray:none;stroke-width:2}
+.hub-label{font-family:var(--mono)}
+.panel{background:var(--blanco);border:1px solid var(--linea);border-radius:14px;padding:1.6rem 1.7rem;min-height:340px}
+.panel .p-tag{font-family:var(--mono);font-size:.66rem;letter-spacing:.18em;text-transform:uppercase;color:var(--terra);margin-bottom:.5rem}
+.panel h3{font-weight:600;font-size:1.55rem;letter-spacing:-.01em;margin-bottom:.15rem}
+.panel .p-rol{font-style:italic;color:var(--terra-osc);margin-bottom:1rem}
+.panel dl{display:grid;gap:.85rem}
+.panel dt{font-family:var(--mono);font-size:.64rem;letter-spacing:.16em;text-transform:uppercase;color:var(--tinta-2);margin-bottom:.15rem}
+.panel dd{font-size:.95rem;line-height:1.5}
+.panel .fallback{margin-top:1.2rem;font-family:var(--mono);font-size:.72rem;color:var(--oliva);border-top:1px dashed var(--linea);padding-top:.8rem}
+
+/* ---------- embudo ---------- */
+.funnel{display:grid;grid-template-columns:repeat(6,1fr);gap:.7rem}
+.stage{background:var(--blanco);border:1px solid var(--linea);border-radius:12px;padding:1.1rem 1rem;position:relative;min-height:210px;display:flex;flex-direction:column}
+.stage .st-n{font-family:var(--mono);font-size:.62rem;letter-spacing:.16em;color:var(--terra)}
+.stage h4{font-weight:600;font-size:1.02rem;margin:.45rem 0 .4rem;letter-spacing:-.01em}
+.stage p{font-size:.8rem;color:var(--tinta-2);line-height:1.45;flex:1}
+.stage .chips{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.7rem}
+.chip{font-family:var(--mono);font-size:.6rem;letter-spacing:.06em;background:var(--papel-2);border:1px solid var(--linea);border-radius:999px;padding:.18rem .55rem;color:var(--tinta)}
+.chip.herr{background:var(--terra);border-color:var(--terra);color:var(--blanco)}
+.stage .arrow{position:absolute;right:-.62rem;top:46%;font-family:var(--mono);color:var(--terra);font-size:1rem;z-index:2}
+
+/* ---------- reglas ---------- */
+.rules{display:grid;grid-template-columns:repeat(3,1fr);gap:1rem}
+.rule{background:var(--blanco);border:1px solid var(--linea);border-radius:12px;padding:1.2rem 1.3rem}
+.rule .r-id{font-family:var(--mono);font-size:.66rem;letter-spacing:.18em;color:var(--terra)}
+.rule h4{font-weight:600;font-size:1.02rem;margin:.4rem 0 .35rem}
+.rule p{font-size:.84rem;color:var(--tinta-2);line-height:1.5}
+
+/* ---------- agenda ---------- */
+.agenda{display:grid;gap:.55rem}
+.slot{display:grid;grid-template-columns:110px 1fr;gap:1.2rem;background:var(--blanco);border:1px solid var(--linea);border-radius:12px;padding:.95rem 1.3rem;align-items:baseline}
+.slot .hora{font-family:var(--mono);font-weight:700;font-size:.85rem;color:var(--terra)}
+.slot .que b{font-weight:600}
+.slot .que span{display:block;font-size:.82rem;color:var(--tinta-2);margin-top:.1rem}
+.notas-sesion{margin-top:1.1rem;font-family:var(--mono);font-size:.72rem;color:var(--tinta-2)}
+
+/* ---------- cuestionario ---------- */
+.q-tools{display:flex;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:1.4rem}
+.progress{flex:1;min-width:220px;height:10px;background:var(--papel-2);border:1px solid var(--linea);border-radius:999px;overflow:hidden}
+.progress i{display:block;height:100%;width:0%;background:var(--terra);border-radius:999px;transition:width .3s}
+.p-count{font-family:var(--mono);font-size:.74rem;letter-spacing:.06em;white-space:nowrap}
+.btn{font-family:var(--mono);font-size:.7rem;letter-spacing:.1em;text-transform:uppercase;cursor:pointer;
+  border:1px solid var(--tinta);background:var(--blanco);color:var(--tinta);border-radius:999px;padding:.55rem 1.1rem;transition:.15s}
+.btn:hover{background:var(--tinta);color:var(--papel)}
+.btn:focus-visible{outline:2px solid var(--terra);outline-offset:2px}
+.btn.primary{background:var(--terra);border-color:var(--terra-osc);color:var(--blanco)}
+.btn.primary:hover{background:var(--terra-osc)}
+.btn.ghost{border-color:var(--linea);color:var(--tinta-2)}
+.block{background:var(--blanco);border:1px solid var(--linea);border-radius:14px;margin-bottom:1.2rem;overflow:hidden}
+.block-head{display:flex;align-items:baseline;gap:.9rem;padding:1rem 1.4rem;background:var(--papel-2);border-bottom:1px solid var(--linea);flex-wrap:wrap}
+.block-head .b-num{font-family:var(--mono);font-size:.66rem;letter-spacing:.16em;color:var(--terra)}
+.block-head h3{font-weight:600;font-size:1.05rem}
+.block-head .b-meta{margin-left:auto;font-family:var(--mono);font-size:.64rem;color:var(--tinta-2);letter-spacing:.05em}
+.q-list{padding:.4rem 1.4rem}
+.q{display:grid;grid-template-columns:auto 1fr auto;gap:.85rem;align-items:start;padding:.8rem 0;border-bottom:1px dashed var(--linea);cursor:pointer}
+.q:last-child{border-bottom:none}
+.q .box{width:19px;height:19px;border:1.6px solid var(--tinta);border-radius:5px;margin-top:.15rem;display:grid;place-items:center;font-family:var(--mono);font-size:.7rem;color:transparent;transition:.15s;flex:none}
+.q.done .box{background:var(--oliva);border-color:var(--oliva);color:var(--blanco)}
+.q.done .q-text{color:var(--tinta-2)}
+.q.done .q-text .t{opacity:.55;text-decoration:line-through;text-decoration-color:var(--terra)}
+.q-text .t{font-size:.94rem;line-height:1.5}
+.q-text .tags{display:flex;gap:.4rem;margin-top:.35rem;flex-wrap:wrap}
+.tag{font-family:var(--mono);font-size:.6rem;letter-spacing:.08em;border:1px solid var(--linea);border-radius:999px;padding:.12rem .55rem;color:var(--tinta-2)}
+.tag.star{border-color:var(--ocre);color:var(--terra-osc);background:#FBF3E1}
+.tag.who{background:var(--papel-2)}
+.q-copy{background:none;border:none;cursor:pointer;font-family:var(--mono);font-size:.75rem;color:var(--tinta-2);padding:.3rem;border-radius:6px;opacity:.6}
+.q-copy:hover{opacity:1;color:var(--terra)}
+.q-copy:focus-visible{outline:2px solid var(--terra)}
+.block-notes{padding:0 1.4rem 1.2rem}
+.block-notes label{display:block;font-family:var(--mono);font-size:.62rem;letter-spacing:.14em;text-transform:uppercase;color:var(--tinta-2);margin-bottom:.35rem}
+.block-notes textarea{width:100%;min-height:64px;resize:vertical;border:1px solid var(--linea);border-radius:10px;background:var(--papel);
+  font-family:var(--mono);font-size:.78rem;line-height:1.5;color:var(--tinta);padding:.7rem .9rem}
+.block-notes textarea:focus{outline:2px solid var(--terra);outline-offset:1px}
+#toast{position:fixed;bottom:1.4rem;left:50%;transform:translateX(-50%) translateY(80px);background:var(--tinta);color:var(--papel);
+  font-family:var(--mono);font-size:.72rem;letter-spacing:.05em;padding:.7rem 1.3rem;border-radius:999px;opacity:0;transition:.3s;z-index:99;pointer-events:none}
+#toast.on{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ---------- footer ---------- */
+footer{background:var(--tinta);color:var(--papel);padding:2.2rem 2rem;margin-top:2rem}
+footer .f-in{max-width:1200px;margin:0 auto;display:flex;gap:2rem;flex-wrap:wrap;align-items:baseline;justify-content:space-between}
+footer .brand{font-family:var(--mono);font-size:.72rem;letter-spacing:.14em;text-transform:uppercase;color:var(--ocre)}
+footer p{font-family:var(--mono);font-size:.66rem;color:rgba(247,242,233,.6);line-height:1.7}
+
+@media (max-width:960px){
+  .sistema{grid-template-columns:1fr}
+  .funnel{grid-template-columns:1fr 1fr}
+  .stage .arrow{display:none}
+  .rules{grid-template-columns:1fr}
+  .topbar nav{display:none}
+  .slot{grid-template-columns:1fr;gap:.2rem}
+}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}.node,.progress i,.btn{transition:none}}
+@media print{
+  .topbar,.q-tools,footer,.q-copy{display:none}
+  body{background:#fff}
+  .block,.panel,.stage,.rule,.slot{break-inside:avoid}
+  textarea{min-height:80px;border:1px solid #ccc}
+}
+</style>
+</head>
+<body>
+
+<header class="topbar">
+  <span class="brand">Practical AI® · Proyecto David Franco</span>
+  <nav>
+    <a href="#sistema">Sistema</a>
+    <a href="#embudo">Embudo</a>
+    <a href="#reglas">Reglas</a>
+    <a href="#sesion">Sesión 12:30</a>
+    <a href="#cuestionario">Cuestionario</a>
+  </nav>
+  <span class="reloj" id="reloj">Sesión 12:30</span>
+</header>
+
+<div class="hero">
+  <p class="eyebrow">Sistema de agentes de IA · Estrategia B2C + Presupuesto 2027</p>
+  <h1>DACLAF <em>Launch&nbsp;Factory</em></h1>
+  <p class="sub">Un cerebro con memoria y cinco especialistas de IA, intercambiables y complementarios, para pasar de ~43–50 a <strong>300 SKUs en 5–6 marcas</strong>. Esta página explica el sistema y lo opera: abajo está el cuestionario que contestaremos en vivo en la sesión de hoy.</p>
+  <div class="meta">
+    <div class="kv"><div class="n">43–50 → 300</div><div class="l">SKUs · 2–3 años</div></div>
+    <div class="kv"><div class="n">5–6</div><div class="l">marcas clave</div></div>
+    <div class="kv"><div class="n">3</div><div class="l">carriles · 3 compuertas</div></div>
+    <div class="kv"><div class="n">6</div><div class="l">IAs · 1 memoria</div></div>
+  </div>
+  <p class="filetag">Sesión 1 · 28 de octubre de 2026 · 12:30 CDMX · Arturo Cervantes (Practical AI®) con David Franco (+ Sara) · Confidencial · Uso interno</p>
+</div>
+<hr class="rule-h">
+
+<section id="sistema">
+  <div class="sec-head">
+    <span class="sec-num">01</span>
+    <h2>El sistema: un cerebro con memoria + cinco especialistas</h2>
+    <span class="hint">Toca cada nodo</span>
+  </div>
+  <div class="sistema">
+    <div class="board" role="group" aria-label="Diagrama del sistema multi-IA">
+      <svg id="board-svg" viewBox="0 0 640 560" aria-hidden="true"></svg>
+    </div>
+    <div class="panel" id="panel" aria-live="polite"></div>
+  </div>
+</section>
+
+<section id="embudo" style="background:var(--papel-2)">
+  <div class="sec-head">
+    <span class="sec-num">02</span>
+    <h2>El embudo de 6 pasos</h2>
+    <span class="hint">Cada paso tiene dueño y entregable</span>
+  </div>
+  <div class="funnel" id="funnel"></div>
+</section>
+
+<section id="reglas">
+  <div class="sec-head">
+    <span class="sec-num">03</span>
+    <h2>Las reglas del juego</h2>
+    <span class="hint">Se citan por su código: R1…R6</span>
+  </div>
+  <div class="rules" id="rules"></div>
+</section>
+
+<section id="sesion" style="background:var(--papel-2)">
+  <div class="sec-head">
+    <span class="sec-num">04</span>
+    <h2>La sesión de hoy · 12:30</h2>
+    <span class="hint">60–75 min · David (+ Sara)</span>
+  </div>
+  <div class="agenda" id="agenda"></div>
+  <p class="notas-sesion">Reglas de la sesión: cada respuesta se captura abajo y se exporta a markdown al cierre → <span style="color:var(--terra)">02_sesiones/2026-10-28_sesion01_david/notas_sesion1.md</span>. Lo que no se sepa queda [POR CONFIRMAR] con dueño y fecha. Al final se actualizan MEMORY.md y BITACORA.md.</p>
+</section>
+
+<section id="cuestionario">
+  <div class="sec-head">
+    <span class="sec-num">05</span>
+    <h2>Cuestionario en vivo · 24 preguntas + cierre</h2>
+    <span class="hint">Haz clic en una pregunta para marcarla como contestada</span>
+  </div>
+  <div class="q-tools">
+    <div class="progress" aria-hidden="true"><i id="pbar"></i></div>
+    <span class="p-count" id="pcount">0 / 23</span>
+    <button class="btn primary" id="export-md" type="button">Exportar notas (.md)</button>
+    <button class="btn ghost" id="reset" type="button">Reiniciar</button>
+  </div>
+  <div id="blocks"></div>
+  <p class="notas-sesion">Las notas se guardan solas en este navegador durante la sesión. «Exportar notas» descarga el registro completo listo para pegar en la carpeta del proyecto. ⭐ = imprescindible para cerrar el embudo de 300 SKUs · el icono ⇲ copia la pregunta para pegarla en cualquier IA.</p>
+</section>
+
+<footer>
+  <div class="f-in">
+    <span class="brand">Practical AI® · <a href="mailto:arturo@practicalAI.tech">arturo@practicalAI.tech</a></span>
+    <p>Proyecto David Franco — Estrategia B2C + Sistema de IA · Carpeta: proyecto-david-franco/ (CLAUDE.md · MEMORY.md · CONTEXTO.md · BITACORA.md)<br>Cifras de: daclaf.com (26-oct-2026) y documento "Acelerador de Lanzamientos" · Confidencial · Uso interno</p>
+  </div>
+</footer>
+
+<div id="toast" role="status"></div>
+
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+/* ============ datos ============ */
+const NODOS = [
+ {id:"hub", x:320, y:280, r:64, nombre:"Claude Code", tipo:"hub", rol:"El Arquitecto · memoria central",
+  fuerte:"Análisis profundo con toda la carpeta en contexto, cruce de datos (ventas × capacidad × regulatorio), redacción estratégica y gobierno de la memoria del proyecto.",
+  cuando:"Abre y cierra cada sesión. Procesa los exports de NetSuite, arma la matriz de priorización y actualiza MEMORY.md / BITACORA.md.",
+  fallback:"GPT (análisis) · Genspark (documentos)"},
+ {id:"nlm", x:320, y:88, r:44, nombre:"NotebookLM", rol:"La Biblioteca",
+  fuerte:"Q&A con cita al párrafo EXCLUSIVAMENTE sobre los documentos del cliente (ventas, estrategia, dossiers). Responde solo con lo que está en las fuentes cargadas y cita el pasaje; reduce el riesgo de inventar, pero igual se verifica. Audio Overview para David.",
+  cuando:"Cuando la pregunta se puede responder con los documentos internos.",
+  fallback:"Claude Code (lectura directa de archivos)"},
+ {id:"ppl", x:532, y:230, r:44, nombre:"Perplexity", rol:"El Investigador",
+  fuerte:"Búsqueda viva con fuentes citadas: tamaños de mercado, precios de góndola, movimientos de competidores, regulación COFEPRIS, benchmarks Hypera/Cimed.",
+  cuando:"Cada vez que un dato no exista en la carpeta y venga de afuera.",
+  fallback:"Genspark deep research"},
+ {id:"man", x:462, y:442, r:44, nombre:"Manus", rol:"El Ejecutor autónomo",
+  fuerte:"Trabajos largos multi-paso con navegador: barrer catálogos de competidores SKU por SKU, armar tablas comparativas de precio/formato/claims, monitoreo periódico.",
+  cuando:"Barridos completos que no deben ocupar horas humanas.",
+  fallback:"Genspark (tareas agénticas compuestas)"},
+ {id:"gen", x:178, y:442, r:44, nombre:"Genspark", rol:"La Fábrica de entregables",
+  fuerte:"Decks, documentos, hojas de cálculo, HTML interactivos, deep research estructurada y AI Drive como almacén.",
+  cuando:"Cada entregable que se le presenta a David.",
+  fallback:"GPT (borradores con plantillas de la carpeta)"},
+ {id:"gpt", x:108, y:230, r:44, nombre:"GPT", rol:"El Segundo parecer",
+  fuerte:"Contracontraste independiente de priorizaciones y decisiones; naming y claims creativos; reescrituras con otro tono.",
+  cuando:"Antes de cada compuerta (Idea / Desarrollo / Lanzamiento) en decisiones de alto impacto.",
+  fallback:"Gemini · Perplexity (re-search adversaria)"}
+];
+const EMBUDO = [
+ {n:"1", t:"Ingesta", p:"David y Sara entregan ventas, listados, maestro de artículos y competidores → quedan intactos en 00_fuentes/ y se indexan.", h:["NotebookLM"]},
+ {n:"2", t:"Investigación", p:"«¿Qué hay afuera?» con fuentes citadas + barridos completos de catálogos de competidores (precio, formato, claims).", h:["Perplexity","Manus"]},
+ {n:"3", t:"Análisis", p:"Matriz de priorización: tendencia de mercado × capacidad (Lerma/maquila) × regulatorio × margen estimado.", h:["Claude Code"]},
+ {n:"4", t:"Decisión", p:"Compuertas Idea → Desarrollo → Lanzamiento. Segunda opinión obligatoria; David decide con dueño y fecha.", h:["GPT","David"]},
+ {n:"5", t:"Entrega", p:"Paquete del lanzamiento: ficha técnica, deck, brief de empaque, comparativo de competidores. Olas trimestrales.", h:["Genspark"]},
+ {n:"6", t:"Memoria", p:"Todo vuelve a la carpeta: fuentes, entregables, decisiones en MEMORY.md y detalle en BITACORA.md.", h:["Claude Code"]}
+];
+const REGLAS = [
+ {id:"R1", t:"La memoria vive en la carpeta", p:"No en los chats. Las conversaciones son descartables; si importa, es un archivo en proyecto-david-franco/."},
+ {id:"R2", t:"Una sola fuente de verdad", p:"NetSuite (maestro de artículos, DF y DAS) = cifras oficiales. daclaf.com = vitrina. Perplexity/Manus = mercado con cita."},
+ {id:"R3", t:"Cifra sin fuente, no existe", p:"Todo dato externo viaja con fuente y fecha. Lo interno sin respaldo se marca [POR CONFIRMAR]. Prohibido inventar. Cada dato recibe confianza A (fuente primaria o dos independientes), B (una fuente sólida) o C (una sola IA sin verificar)."},
+ {id:"R4", t:"Segunda opinión en compuertas", p:"Ninguna decisión de alto impacto con una sola IA: Claude + GPT (u otro par), y las diferencias se documentan."},
+ {id:"R5", t:"Lo confidencial no sale", p:"Tres niveles: público (cualquier IA), interno (solo el proyecto compartido y NotebookLM) y crítico (costos, márgenes, presupuesto: solo el proyecto compartido). A herramientas externas va únicamente información pública o anonimizada. Nunca pegar exports de NetSuite en chats públicos."},
+ {id:"R6", t:"Nunca se sobrescribe", p:"Las versiones nuevas se agregan (v2, v3…) y la anterior queda intacta como histórico."}
+];
+const AGENDA = [
+ {h:"12:30", t:"Encuadre", d:"Dónde estamos, la meta 300 SKUs y qué pasó desde el 26-oct."},
+ {h:"12:35", t:"El sistema de IA", d:"Cerebro + especialistas, el embudo y las reglas (secciones 01–03 de esta página)."},
+ {h:"12:45", t:"Cuestionario en vivo · bloques 1–3", d:"La meta, estado actual y cuellos de botella."},
+ {h:"13:05", t:"Cuestionario · bloques 4–6", d:"Capacidad y abastecimiento, regulatorio, comercial y dinero."},
+ {h:"13:20", t:"Cierre", d:"Qué entrega quién y para cuándo; fecha de la sesión 2 (alimentar IA + priorizar)."}
+];
+const BLOQUES = [
+ {num:"0", t:"Gobierno del sistema", min:"5 min", qs:[
+   {q:"¿Qué datos pueden compartir hoy mismo —ventas, listados, maestro de artículos, competidores— y en qué formato viven hoy (NetSuite, Excel, Shopify)?", who:"David/Sara"},
+   {q:"¿Autorizan que ventas por SKU y capacidad vivan en un proyecto compartido que opera Practical AI, con acceso para David y Sara, y aceptan la regla R5 (a herramientas externas solo información pública o anonimizada)? Hoy DACLAF no tiene política de TI para IA.", who:"David", star:true},
+   {q:"¿Quién de su equipo es el dueño del dato para cada bloque: ventas, catálogo, competidores, regulatorio?", who:"David"},
+   {q:"¿Cada cuánto quieren sesionar (semanal/quincenal) y qué formato prefieren para las sesiones de análisis?", who:"David", star:true}
+ ]},
+ {num:"1", t:"La meta", min:"10 min", qs:[
+   {q:"¿Qué cuenta como «SKU» para la meta de 300: ¿las presentaciones cuentan, los kits (ya son 9 de 43), las ediciones limitadas?", who:"DG · insumo #4", star:true},
+   {q:"¿Cuál es la mezcla esperada entre carriles A (extensiones) / B (cosmético-suplemento) / C (OTC) y entre las marcas? ¿Qué marcas participan y cuáles entrarían nuevas?", who:"DG/Marketing · insumo #5", star:true},
+   {q:"¿300 en 2 años o en 3? Es decir: ¿150 lanzamientos/año o 100?", who:"DG"},
+   {q:"¿Extender primero la marca ancla (Fotosun a cuidado dérmico/post-solar) o construir desde cero en las marcas pequeñas?", who:"DG/Sara"}
+ ]},
+ {num:"2", t:"Estado actual", min:"10 min", qs:[
+   {q:"¿Cuántos SKUs activos hay hoy por entidad (DF/DAS/GC) y por marca en el maestro de NetSuite?", who:"Sistemas · insumo #1", star:true},
+   {q:"¿Qué se lanzó en 2024 y 2025, y cuánto tardó realmente cada lanzamiento de la compuerta 1 a la venta?", who:"Marketing · insumo #2", star:true},
+   {q:"¿Qué es lo que más se vende y qué es lo que no se vende? (el listado de rotación comprometido el 26-oct)", who:"Sara/Marketing"},
+   {q:"El OTC casi no aparece en la tienda (solo Daclafin): ¿ese portafolio vive en Similares y cadenas? ¿Qué volumen representa?", who:"Comercial"}
+ ]},
+ {num:"3", t:"Cuellos de botella", min:"10 min", qs:[
+   {q:"¿Dónde se atora hoy el proceso: regulatorio, diseño, compras, aprobaciones, maquila, alta en NetSuite?", who:"Todas · insumo #3", star:true},
+   {q:"¿Quién puede ser el líder del acelerador y quiénes integran la célula?", who:"DG · insumo #13", star:true},
+   {q:"¿Qué decisiones podría tomar esa célula SIN escalar a Dirección?", who:"DG · insumo #15"},
+   {q:"¿Cuántas personas hay hoy en desarrollo, regulatorio y diseño, y con qué carga?", who:"Capital Humano · insumo #9"}
+ ]},
+ {num:"4", t:"Capacidad y abastecimiento", min:"10 min", qs:[
+   {q:"¿Qué capacidad real tiene Lerma con la línea WDS y qué volumen iría a maquila? (define el % hacer vs. comprar)", who:"Operaciones · insumo #7", star:true},
+   {q:"¿Qué maquiladores tenemos calificados por categoría?", who:"Compras/Calidad · insumo #8"},
+   {q:"¿Se explora la categoría de suplementos para mascotas en canales veterinarios? ¿Quién la analiza?", who:"DG/Sara"}
+ ]},
+ {num:"5", t:"Regulatorio", min:"5 min", qs:[
+   {q:"¿Qué registros sanitarios OTC vigentes son extensibles y qué trámites están en curso?", who:"Regulatorio · insumo #6", star:true},
+   {q:"¿Prefieren desarrollar registros propios o comprar dossiers internacionales listos para homologación (modelo Rinomär / BD de Hypera)? ¿Con qué presupuesto?", who:"DG/Regulatorio"}
+ ]},
+ {num:"6", t:"Comercial, dinero y criterios", min:"10 min", qs:[
+   {q:"¿Qué canales absorben lanzamientos y cuál es su apetito real por novedad? ¿Qué compromisos trae la licitación 2027 de Similares?", who:"Comercial · insumos #10–11", star:true},
+   {q:"¿Qué criterio de éxito tendrá un SKU (venta mínima a 6 y 12 meses, margen, rotación) y cuánta tolerancia hay a SKUs que fracasan y a inventario que caduca? ¿Existe hoy una regla de descontinuación?", who:"DG/Finanzas · insumos #12, #16, #17", star:true},
+   {q:"¿Con qué presupuesto cuenta el acelerador para desarrollo, registros e inventario inicial dentro del Presupuesto 2027?", who:"Finanzas/Rafa · insumo #14", star:true}
+ ]},
+ {num:"✓", t:"Cierre", min:"5 min", qs:[
+   {q:"Acordar: quién entrega qué dato y para cuándo (la lista sale de las respuestas).", who:"Ambos"},
+   {q:"Fechar la sesión 2: alimentar los sistemas con los datos + primer análisis de priorización.", who:"Ambos"},
+   {q:"Nombrar en la sesión (si es posible) al líder del acelerador.", who:"David · insumo #13"}
+ ]}
+];
+const TOTAL = BLOQUES.reduce((a,b)=>a+b.qs.length,0);
+
+/* ============ estado ============ */
+const LS = "pai_david_s1";
+let state = {done:{}, notas:{}};
+try{ const s = JSON.parse(localStorage.getItem(LS)); if(s && s.done) state = s; }catch(e){}
+function save(){ try{ localStorage.setItem(LS, JSON.stringify(state)); }catch(e){} }
+function toast(msg){ const t=document.getElementById("toast"); t.textContent=msg; t.classList.add("on"); clearTimeout(t._h); t._h=setTimeout(()=>t.classList.remove("on"),1800); }
+
+/* ============ reloj / cuenta regresiva ============ */
+function reloj(){
+  const el=document.getElementById("reloj"), hoy=new Date();
+  const s=new Date(hoy.getFullYear(),hoy.getMonth(),hoy.getDate(),12,30,0);
+  const fin=new Date(hoy.getFullYear(),hoy.getMonth(),hoy.getDate(),13,45,0);
+  if(hoy<s){ const m=Math.floor((s-hoy)/60000); el.textContent="Sesión 12:30 · faltan "+Math.floor(m/60)+"h "+String(m%60).padStart(2,"0")+"m"; }
+  else if(hoy<=fin){ el.textContent="● EN SESIÓN · 12:30"; }
+  else{ el.textContent="Sesión 12:30 · concluida"; }
+}
+reloj(); setInterval(reloj,30000);
+
+/* ============ tablero (SVG) ============ */
+const svgNS="http://www.w3.org/2000/svg";
+const board=document.getElementById("board-svg");
+let activo="hub";
+NODOS.forEach(n=>{
+  if(n.id==="hub") return;
+  const p=document.createElementNS(svgNS,"path");
+  p.setAttribute("class","edge"); p.setAttribute("id","edge-"+n.id);
+  p.setAttribute("d",`M ${320-n.r*0.1} ${280-n.r*0.1} L ${n.x} ${n.y}`);
+  p.setAttribute("stroke-linecap","round");
+  board.appendChild(p);
+});
+NODOS.forEach(n=>{
+  const g=document.createElementNS(svgNS,"g");
+  g.setAttribute("class","node"); g.setAttribute("id","node-"+n.id);
+  g.setAttribute("tabindex","0"); g.setAttribute("role","button");
+  g.setAttribute("aria-label",n.nombre);
+  const halo=document.createElementNS(svgNS,"circle");
+  halo.setAttribute("class","halo"); halo.setAttribute("cx",n.x); halo.setAttribute("cy",n.y); halo.setAttribute("r",n.r);
+  const c=document.createElementNS(svgNS,"circle");
+  c.setAttribute("class","core"); c.setAttribute("cx",n.x); c.setAttribute("cy",n.y); c.setAttribute("r",n.r);
+  const t=document.createElementNS(svgNS,"text");
+  t.setAttribute("x",n.x); t.setAttribute("y",n.y+3); t.setAttribute("text-anchor","middle");
+  t.setAttribute("font-size", n.id==="hub"?"14":"12"); t.setAttribute("font-weight","700");
+  t.textContent = n.id==="hub" ? "CARPETA" : (n.id==="nlm"?"NLM":(n.id==="ppl"?"PPL":(n.id==="man"?"MNS":(n.id==="gen"?"GSK":"GPT"))));
+  const r=document.createElementNS(svgNS,"text");
+  r.setAttribute("class","rol"); r.setAttribute("x",n.x); r.setAttribute("y",n.y+(n.id==="hub"?22:18)); r.setAttribute("text-anchor","middle");
+  r.textContent = n.id==="hub" ? "Claude Code · memoria" : n.nombre;
+  g.append(halo,c,t,r);
+  g.addEventListener("click",()=>seleccionar(n.id));
+  g.addEventListener("keydown",e=>{if(e.key==="Enter"||e.key===" "){e.preventDefault();seleccionar(n.id);}});
+  board.appendChild(g);
+});
+function seleccionar(id){
+  activo=id;
+  NODOS.forEach(n=>{
+    document.getElementById("node-"+n.id).classList.toggle("active",n.id===id);
+    if(n.id!=="hub") document.getElementById("edge-"+n.id).classList.toggle("active",n.id===id);
+  });
+  const n=NODOS.find(n=>n.id===id);
+  const tag = n.id==="hub" ? "Nodo central · la carpeta compartida" : "Especialista · intercambiable";
+  document.getElementById("panel").innerHTML = `
+    <p class="p-tag">${tag}</p>
+    <h3>${n.nombre}</h3>
+    <p class="p-rol">${n.rol}</p>
+    <dl>
+      <div><dt>Qué hace mejor que las otras</dt><dd>${n.fuerte}</dd></div>
+      <div><dt>Cuándo se usa</dt><dd>${n.cuando}</dd></div>
+    </dl>
+    <p class="fallback">Suplente si falla o cambia: ${n.fallback}</p>`;
+}
+seleccionar("hub");
+
+/* ============ embudo ============ */
+document.getElementById("funnel").innerHTML = EMBUDO.map((s,i)=>`
+  <div class="stage">
+    <span class="st-n">PASO ${s.n}</span>
+    <h4>${s.t}</h4>
+    <p>${s.p}</p>
+    <div class="chips">${s.h.map(h=>`<span class="chip herr">${h}</span>`).join("")}</div>
+    ${i<EMBUDO.length-1?'<span class="arrow" aria-hidden="true">→</span>':""}
+  </div>`).join("");
+
+/* ============ reglas ============ */
+document.getElementById("rules").innerHTML = REGLAS.map(r=>`
+  <div class="rule"><span class="r-id">${r.id}</span><h4>${r.t}</h4><p>${r.p}</p></div>`).join("");
+
+/* ============ agenda ============ */
+document.getElementById("agenda").innerHTML = AGENDA.map(a=>`
+  <div class="slot"><span class="hora">${a.h}</span><div class="que"><b>${a.t}</b><span>${a.d}</span></div></div>`).join("");
+
+/* ============ cuestionario ============ */
+function render(){
+  document.getElementById("blocks").innerHTML = BLOQUES.map((b,bi)=>`
+    <div class="block">
+      <div class="block-head">
+        <span class="b-num">BLOQUE ${b.num}</span>
+        <h3>${b.t}</h3>
+        <span class="b-meta">${b.min} · <span id="bc-${bi}"></span></span>
+      </div>
+      <div class="q-list">
+        ${b.qs.map((q,qi)=>`
+        <div class="q ${state.done[bi+"-"+qi]?"done":""}" id="q-${bi}-${qi}" data-b="${bi}" data-q="${qi}" role="checkbox" aria-checked="${!!state.done[bi+"-"+qi]}" tabindex="0">
+          <span class="box" aria-hidden="true">✓</span>
+          <span class="q-text"><span class="t">${q.q}</span>
+            <span class="tags">${q.star?'<span class="tag star">★ imprescindible</span>':""}<span class="tag who">${q.who}</span></span>
+          </span>
+          <button class="q-copy" type="button" title="Copiar pregunta" aria-label="Copiar pregunta">⇲</button>
+        </div>`).join("")}
+      </div>
+      <div class="block-notes">
+        <label for="nota-${bi}">Notas del bloque ${b.num} — respuestas, decisiones, [POR CONFIRMAR]</label>
+        <textarea id="nota-${bi}" data-b="${bi}" placeholder="Captura aquí lo que responde David…">${state.notas[bi]||""}</textarea>
+      </div>
+    </div>`).join("");
+  document.querySelectorAll(".q").forEach(el=>{
+    el.addEventListener("click",e=>{
+      if(e.target.classList.contains("q-copy")) return;
+      toggle(el.dataset.b, el.dataset.q);
+    });
+    el.addEventListener("keydown",e=>{if((e.key==="Enter"||e.key===" ")&&e.target===el){e.preventDefault();toggle(el.dataset.b, el.dataset.q);}});
+  });
+  document.querySelectorAll(".q-copy").forEach(btn=>{
+    btn.addEventListener("click",e=>{
+      e.stopPropagation();
+      const wrap=btn.closest(".q"), b=+wrap.dataset.b, qi=+wrap.dataset.q;
+      const txt="Pregunta "+(BLOQUES[b].num==="✓"?"cierre":"B"+BLOQUES[b].num)+" — "+BLOQUES[b].qs[qi].q;
+      (navigator.clipboard?navigator.clipboard.writeText(txt):Promise.reject()).then(()=>toast("Pregunta copiada — pégala en la IA que quieras")).catch(()=>toast("No se pudo copiar automáticamente"));
+    });
+  });
+  document.querySelectorAll(".block-notes textarea").forEach(ta=>{
+    ta.addEventListener("input",()=>{ state.notas[ta.dataset.b]=ta.value; save(); });
+  });
+  updateProgress();
+}
+function toggle(b,q){
+  const k=b+"-"+q;
+  state.done[k]=!state.done[k];
+  const el=document.getElementById("q-"+b+"-"+q);
+  el.classList.toggle("done",!!state.done[k]);
+  el.setAttribute("aria-checked",!!state.done[k]);
+  save(); updateProgress();
+}
+function updateProgress(){
+  const n=Object.values(state.done).filter(Boolean).length;
+  document.getElementById("pbar").style.width=(n/TOTAL*100)+"%";
+  document.getElementById("pcount").textContent=n+" / "+TOTAL;
+  BLOQUES.forEach((b,bi)=>{
+    const m=b.qs.map((q,qi)=>state.done[bi+"-"+qi]?1:0).reduce((a,c)=>a+c,0);
+    const el=document.getElementById("bc-"+bi);
+    if(el) el.textContent=m+"/"+b.qs.length+" contestadas";
+  });
+}
+document.getElementById("export-md").addEventListener("click",()=>{
+  let md="# Notas en vivo · Sesión 1 con David — 28 oct 2026, 12:30 CDMX\n\nProyecto David Franco — Estrategia B2C + Sistema de IA · Practical AI®\nExportado: "+new Date().toLocaleString("es-MX")+"\n";
+  md+="\nProgreso: "+Object.values(state.done).filter(Boolean).length+" de "+TOTAL+" preguntas marcadas como contestadas.\n";
+  BLOQUES.forEach((b,bi)=>{
+    md+="\n## Bloque "+b.num+" · "+b.t+" ("+b.min+")\n";
+    b.qs.forEach((q,qi)=>{
+      md+="\n- ["+(state.done[bi+"-"+qi]?"x":" ")+"] "+q.q+(q.star?" ⭐":"")+" _("+q.who+")_";
+      if(state.done[bi+"-"+qi]) md+="  → **contestada**";
+    });
+    const nota=(state.notas[bi]||"").trim();
+    md+="\n\n**Respuestas / notas:**\n\n"+(nota||"_(sin captura)_")+"\n";
+  });
+  md+="\n---\n\n*Guardar como `02_sesiones/2026-10-28_sesion01_david/notas_sesion1.md` y actualizar MEMORY.md + BITACORA.md al cierre.*\n";
+  const blob=new Blob([md],{type:"text/markdown"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download="2026-10-28_notas_sesion1_david.md";
+  document.body.appendChild(a); a.click(); a.remove();
+  toast("Notas exportadas — guárdalas en 02_sesiones/");
+});
+document.getElementById("reset").addEventListener("click",()=>{
+  if(confirm("¿Reiniciar el marcado y las notas de toda la sesión? Esta acción no se puede deshacer.")){
+    state={done:{},notas:{}}; save(); render(); toast("Sesión reiniciada");
+  }
+});
+render();
+</script>
+
+</body>
+</html>

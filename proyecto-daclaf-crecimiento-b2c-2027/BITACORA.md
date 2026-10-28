@@ -10,3 +10,8 @@
 - `sesion_2026-10-28/Daclaf_Sistema_IA_B2C_Sesion_28oct.html`: explicación interactiva del diseño (capas, herramientas y simulador de datos, embudo, ruta, decisiones) + 14 preguntas en vivo con captura de respuestas y exportación a Markdown.
 - `sesion_2026-10-28/Daclaf_Sistema_IA_B2C_Sesion_28oct.pptx`: 11 láminas, preguntas incluidas, notas del orador.
 - Cambio de supuesto: cuentas del Dr., él opera, Project compartido con David; sin política de TI (regla mínima propuesta en Q10).
+
+### 28.OCT.2026 (c) — Piloto post-solar, UML y revisión del HTML alternativo
+- Creado el piloto 01 (post-solar) con briefs para Perplexity y Genspark, solo datos N1.
+- Creado `04_Arquitectura/UML_Sistema_B2C_Interactivo.html` con cinco diagramas interactivos y la arquitectura recomendada.
+- Revisado el HTML alternativo `Launch Factory`: mejor como pantalla de sesión (agenda, mapeo a insumos del PDF, roles tangibles); le faltaban gobierno de datos, confianza de evidencia y autorización del Project compartido. Se guardó una v2 con ajustes mínimos.

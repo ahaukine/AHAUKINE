@@ -17,6 +17,11 @@ Contexto revisado (PDF Acelerador, 2 resúmenes Plaud, MEMORY y BITACORA del pro
 - **No hay política de TI en DACLAF.** Se propone regla mínima de datos (Q10 de la sesión).
 - Material de la sesión: `sesion_2026-10-28/` (HTML interactivo con preguntas en vivo + PPTX de 11 láminas).
 
+## Entregables posteriores (28.OCT)
+- `03_Pilotos/Piloto_01_PostSolar_Briefs.md`: briefs N1 para Perplexity (3 prompts) y Genspark (1), prompt de ingesta, verificación de 10 filas y rúbrica.
+- `04_Arquitectura/UML_Sistema_B2C_Interactivo.html`: UML interactivo y arquitectura recomendada v1.0 (núcleo antes del 18-dic: M5 pre-vuelo, M1 ledger estructurado, M3 pruebas por herramienta, M2 verificación, M6 decisiones/versiones, M10 presupuesto parametrizado).
+- `sesion_2026-10-28/Daclaf_Launch_Factory_Sesion1_v2.html`: copia ajustada del HTML alternativo recibido (original intacto): 43–50 SKUs, 24 preguntas con la autorización de datos, R5 con tres niveles, R3 con confianza A/B/C, afirmación de NotebookLM moderada, correo corregido.
+
 ## Propuestas pendientes de decisión del Dr.
 - Modo Build (multi-IA) vs Run (stack mínimo) — recomendación: ambos.
 - Hub Claude + satélites manuales (opción A) para el 18-dic; automatización con Make como fase 2.

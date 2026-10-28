@@ -24,6 +24,9 @@
 | `02_Contrato_de_Intercambio/brief_estandar.md` | Plantilla de encargo válida para cualquier IA |
 | `02_Contrato_de_Intercambio/ledger_evidencia.csv` | Registro único de evidencia (todas las IA escriben igual) |
 | `fuentes/INDEX.md` | Inventario de fuentes originales y su estatus |
+| `03_Pilotos/Piloto_01_PostSolar_Briefs.md` | Briefs para Perplexity y Genspark, rúbrica y protocolo de verificación |
+| `04_Arquitectura/UML_Sistema_B2C_Interactivo.html` | UML interactivo (casos de uso, secuencia, estados, clases, componentes) y arquitectura recomendada v1.0 |
+| `sesion_2026-10-28/` | Material de la sesión con David y Sara: HTML interactivo, PPTX y Launch Factory v2 |
 
 ## Convenciones
 
