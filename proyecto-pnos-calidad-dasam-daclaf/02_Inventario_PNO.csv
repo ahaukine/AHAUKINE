@@ -1,0 +1,5 @@
+codigo,nombre,entidad,linea,prioridad,estado,responsable,vigencia_anios,pendientes_criticos,fecha_objetivo,requiere_espejo,vinculo_netsuite,notas
+PNO-002,Buenas practicas de documentacion y llenado de registros,DASAM,Suplementos,1,Borrador,Irene,3,"Anexo catalogo de firmas; tiempos de resguardo; formatos oficiales; validar normas y ALCOA",2026-12-31,Si (cosmeticos),Registros electronicos,No se localizo version previa
+PNO-016,Seleccion y evaluacion de proveedores,DASAM,Suplementos y cosmeticos,1,Borrador,Irene,[POR CONFIRMAR],14 de 19,2026-12-31,No,Estados de proveedor aprobado/no aprobado/bloqueado,Frecuencia anual vs trimestral sin definir
+PNO-010,Analisis de peligros y puntos criticos de control (HACCP),DASAM,[POR CONFIRMAR],1,Sin iniciar entrevista,Irene,[POR CONFIRMAR],15 bloqueantes,2026-12-31,[POR CONFIRMAR],[POR DEFINIR],Definir lider y equipo multidisciplinario
+PNO-LIMP,Limpieza (REV01),[POR CONFIRMAR],[POR CONFIRMAR],2,Borrador con comentarios,Irene,[POR CONFIRMAR],Procesar control de cambios,[POR DEFINIR],[POR CONFIRMAR],[POR DEFINIR],Codigo real por confirmar
