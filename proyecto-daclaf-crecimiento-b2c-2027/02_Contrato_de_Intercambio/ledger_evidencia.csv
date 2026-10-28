@@ -1,0 +1,3 @@
+id,fecha_captura,modulo,afirmacion,tipo,valor,unidad,periodo,fuente_url,fecha_fuente,tipo_fuente,herramienta,confianza,triangulado_con,verificado_por,estatus,notas
+EV-001,2026-10-28,E0,Catalogo daclaf.com al 26-oct: productos publicados,HECHO-INTERNO,43,productos,2026-10-26,https://daclaf.com/collections/all,2026-10-26,primaria,Revision manual (PDF Acelerador),B,,,POR CONFIRMAR vs maestro NetSuite,34 individuales + 9 kits; no es maestro de articulos
+EV-002,2026-10-28,E0,Fotosun concentra aprox 50% de ventas B2C con 10-12 SKUs,HECHO-INTERNO,50,porcentaje de ventas B2C,POR DEFINIR,,2026-10-26,primaria,Transcripcion reunion David+Sara,C,,,POR CONFIRMAR con ventas por SKU,Dicho verbalmente; validar con base de ventas
