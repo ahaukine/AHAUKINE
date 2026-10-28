@@ -15,3 +15,6 @@
 - Creado el piloto 01 (post-solar) con briefs para Perplexity y Genspark, solo datos N1.
 - Creado `04_Arquitectura/UML_Sistema_B2C_Interactivo.html` con cinco diagramas interactivos y la arquitectura recomendada.
 - Revisado el HTML alternativo `Launch Factory`: mejor como pantalla de sesión (agenda, mapeo a insumos del PDF, roles tangibles); le faltaban gobierno de datos, confianza de evidencia y autorización del Project compartido. Se guardó una v2 con ajustes mínimos.
+
+### 28.OCT.2026 (d) — PPTX alineado con los ajustes de v2
+- PowerPoint ahora de 12 láminas: cifra de catálogo con la aclaración de ~50 SKUs de la reunión, regla R5 con el texto de v2 en la lámina de datos, lámina nueva de confianza A/B/C (regla R3) y nota moderada sobre NotebookLM en las notas del orador.
