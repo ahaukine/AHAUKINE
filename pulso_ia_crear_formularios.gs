@@ -1,5 +1,5 @@
 /**
- * Pulso IA · Comunidad Harvard México — creador de formularios piloto (v0.2.1)
+ * Pulso IA · Comunidad Harvard México — creador de formularios piloto (v0.2.2)
  *
  * QUÉ HACE
  *   Crea dos Google Forms nuevos en tu Drive (COMPLETA para los ~80 del grupo, CORTA para los ~800)
@@ -16,20 +16,26 @@
 const CONFIG = {
   SRC_FORM_ID: '1Bbc05MVGd4XObrtEZJs3xsFa-ApGSmcUdYjaN85dKjQ', // AI Readiness Survey v3.0 - Practical AI
   NOMBRE: 'Pulso IA · Comunidad Harvard México',
-  RESPONSABLE: '[PENDIENTE: responsable del tratamiento de datos]',
-  AVISO: '[PENDIENTE: enlace al aviso de privacidad]',
+  RESPONSABLE: 'Harvard Club de México',
+  ENCARGADO: 'Practical AI®',
+  CONTACTO: 'arturo@practicalAI.tech', // correo para derechos ARCO y aviso integral; cámbialo si el Club prefiere otro
   MIN_COMPLETA: '16–18',
   MIN_CORTA: '9–10'
 };
 
 const NS = 'No sé';
 
-// ───────────────────────── punto de entrada ─────────────────────────
-function crearPiloto() {
+// ───────────────────────── puntos de entrada ─────────────────────────
+// crearPiloto: solo la versión CORTA (la del QR del evento).
+function crearPiloto() { crear_(['CORTA']); }
+// crearCompleta: la versión COMPLETA, para después.
+function crearCompleta() { crear_(['COMPLETA']); }
+
+function crear_(versiones) {
   const src = FormApp.openById(CONFIG.SRC_FORM_ID);
   const bank = src.getItems().map(function (it) { return { item: it, title: it.getTitle().trim() }; });
   const salida = [];
-  ['COMPLETA', 'CORTA'].forEach(function (v) { salida.push(construir_(v, bank)); });
+  versiones.forEach(function (v) { salida.push(construir_(v, bank)); });
   Logger.log('\n' + salida.join('\n\n'));
 }
 
@@ -50,8 +56,8 @@ function construir_(version, bank) {
 
   // ── Bienvenida + consentimiento
   form.addSectionHeaderItem().setTitle('Bienvenida').setHelpText(intro_(full));
-  mc_(form, 'Aviso de privacidad y uso estadístico', ['Sí, acepto el aviso de privacidad y que mis respuestas se usen de forma agregada'], true,
-      'Responsable del tratamiento: ' + CONFIG.RESPONSABLE + '. Aviso: ' + CONFIG.AVISO);
+  form.addSectionHeaderItem().setTitle('Aviso de privacidad simplificado').setHelpText(aviso_());
+  mc_(form, 'Aviso de privacidad y uso estadístico', ['Sí, leí el aviso de privacidad y acepto que mis respuestas se usen para las finalidades descritas'], true);
   cb_(form, 'Autorizaciones opcionales', [
     'Pueden contactarme para invitaciones, eventos y resultados',
     'Pueden incluirme en el directorio de innovadores o proponerme como ponente'
@@ -199,6 +205,14 @@ function intro_(full) {
     'Qué recibes: los resultados agregados de la comunidad, antes que nadie.\n\n' +
     'Privacidad: tus respuestas se reportan solo de forma agregada y nunca se publica un corte con menos de 5 personas. Tu nombre y contacto se guardan por separado. Solo aparecerás como contacto o ponente si lo autorizas.\n\n' +
     'No hay respuestas correctas. Responde lo que ocurre hoy, no lo que debería ocurrir. Diseño y análisis: Practical AI®, a solicitud del grupo.';
+}
+
+function aviso_() {
+  return CONFIG.RESPONSABLE + ' (el «Club») es responsable del tratamiento de los datos personales que proporciones en esta encuesta. ' + CONFIG.ENCARGADO + ' los analiza por encargo del Club.\n\n' +
+    'Finalidades necesarias: (1) generar estadísticas agregadas sobre el uso y la adopción de inteligencia artificial en la comunidad; (2) vincular tus respuestas entre olas de la encuesta mediante tu correo, para medir cambios en el tiempo.\n\n' +
+    'Finalidades adicionales, solo si las autorizas abajo: contactarte para invitaciones, eventos y resultados; incluirte en un directorio de innovadores o proponerte como ponente.\n\n' +
+    'No se solicitan datos sensibles. Tus datos no se venden ni se transfieren a terceros. Los resultados se publican solo de forma agregada y nunca con grupos de menos de 5 personas.\n\n' +
+    'Puedes ejercer tus derechos de acceso, rectificación, cancelación y oposición, o revocar tu consentimiento, escribiendo a ' + CONFIG.CONTACTO + '. El aviso de privacidad integral está disponible a solicitud en ese mismo correo.';
 }
 
 // ───────────────────────── utilidades ─────────────────────────
