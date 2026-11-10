@@ -284,11 +284,6 @@ function construirV1_(bank) {
   mc_(form, 'S7: ¿Cuánto se gasta al mes en IA para tu uso (USD, incluye lo que paga tu organización por ti)?', ['0', 'Menos de 20', '20–50', '50–200', '200–1,000', 'Más de 1,000', NS], true);
   par_(form, 'S8: Describe el flujo de trabajo con IA del que estás más orgulloso: qué hace, con qué herramientas y qué cambió', false);
   txt_(form, 'S9: ¿Qué estás aprendiendo o probando ahora mismo con IA?', false);
-  form.addSectionHeaderItem().setTitle('Tres preguntas de comparación').setHelpText('Las mismas que en una encuesta anterior, para poder comparar.');
-  copiar_(form, buscar_(bank, function (t) { return t.indexOf('Q1.2') === 0 && t.indexOf('30 días') < 0; }) ||
-                buscar_(bank, function (t) { return t.indexOf('Q1.2') === 0; }), faltan, 'Q1.2');
-  copiar_(form, buscar_(bank, function (t) { return t.indexOf('Q3.2:') === 0; }), faltan, 'Q3.2');
-  copiar_(form, buscar_(bank, function (t) { return t.indexOf('Q3.3:') === 0; }), faltan, 'Q3.3');
 
   // ── 4 · Criterio y visión
   pagina_(form, 'Criterio', 'Cinco preguntas rápidas. No es examen: si no sabes, elige «No sé»; eso también nos sirve.');
